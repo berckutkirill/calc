@@ -1,0 +1,19 @@
+<script>
+    const data = {{{json data}}};
+    console.log(data);
+</script>
+<form class="ajaxForm" method="post" action="/addNode">
+    {{> select data.material }}
+    {{> selectMultiple data.series }}
+    <input type="hidden" name="owner" value="material">
+    <input type="hidden" name="item" value="series">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<form class="ajaxForm" method="post" action="/addNode">
+    {{> select data.series }}
+    {{> selectMultiple data.model }}
+    <input type="hidden" name="owner" value="series">
+    <input type="hidden" name="item" value="model">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

@@ -1,17 +1,10 @@
 <script>
     const data = {{{json data}}};
+    console.log(data);
 </script>
 <form class="ajaxForm" method="post" action="/addCloth">
-    {{> param}}
-    <div class="form-group">
-        <div class="row">
-            <div class="col-6">
-        <label for="price">Цена</label>
-            </div>
-            <div class="col-6">
-
-            <input type="text" id="price" class="form-control" name="price" />
-        </div>
-    </div>
+    {{> select data.material }}
+    {{> select data.series }}
+    {{> select data.model }}
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>

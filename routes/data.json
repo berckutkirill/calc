@@ -1,5 +1,5 @@
 {
-  "models": [
+  "model": [
     {"title":"РД001"},
     {"title":"РДА82"},
     {"title":"РДА83"},
@@ -159,14 +159,14 @@
     {"title":"ЛЧ"},
     {"title":"Л3D"}
   ],
-  "materials": [
+  "material": [
     {"title":"экошпон"},
     {"title":"шпон и пластик"},
     {"title":"шпон и эмаль"},
     {"title":"шпон"},
     {"title":"эмаль"}
   ],
-  "furnishes": [
+  "furnish": [
     {"title":"живое дерево"},
     {"title":"бережное прикосновение"},
     {"title":"шпон fine-line"},
@@ -177,11 +177,11 @@
     {"title":"полипропилен (экошпон)"},
     {"title":"суперматовая плёнка"}
   ],
-  "lacobels": [
+  "lacobel": [
     {"title":"черный","color":"черный"},
     {"title":"белый","color":"белый"}
   ],
-  "colors": [
+  "color": [
     {"title":"венге"},
     {"title":"дуб"},
     {"title":"орех"},
@@ -203,7 +203,7 @@
     {"title":"венге белый"},
     {"title":"профиль белый"}
   ],
-  "cloth_types": [
+  "cloth_type": [
     {"title":"полотно глухой конструкции"},
     {"title":"с алюминиевой кромкой с 3 сторон"},
     {"title":"с алюминиевой кромкой с 3 сторон и молдингом"},
@@ -211,11 +211,11 @@
     {"title":"открытая текстура"},
     {"title":"скрытая текстура"}
   ],
-  "stains": [
+  "stain": [
     {"title":"джаз"},
     {"title":"васильки"}
   ],
-  "glasses":[
+  "glass":[
     {"satin":true, "width": 8, "color": "бронза"},
     {"satin":true, "width": 8, "color": "бесцветный"},
     {"satin":true, "width": 8, "color": "бесцветный", "stained":true},
@@ -226,7 +226,25 @@
     {"satin":true, "width": 4, "color": "бронза", "stained":true},
     {"satin":true, "width": 6, "stained":true, "facet": 3}
   ],
-  "boxes": [
+  "cloth_params":[
+    {"width": 600, "height":2000, "patina": false, "reinforced": false},
+    {"width": 600, "height":2000, "patina": true, "reinforced": false},
+    {"width": 600, "height":2000, "patina": false, "reinforced": true},
+    {"width": 600, "height":2000, "patina": true, "reinforced": true},
+    {"width": 900, "height":2000, "patina": false, "reinforced": false},
+    {"width": 900, "height":2000, "patina": true, "reinforced": false},
+    {"width": 900, "height":2000, "patina": false, "reinforced": true},
+    {"width": 900, "height":2000, "patina": true, "reinforced": true},
+    {"width": 600, "height":2200, "patina": false, "reinforced": false},
+    {"width": 600, "height":2200, "patina": true, "reinforced": false},
+    {"width": 600, "height":2200, "patina": false, "reinforced": true},
+    {"width": 600, "height":2200, "patina": true, "reinforced": true},
+    {"width": 900, "height":2200, "patina": false, "reinforced": false},
+    {"width": 900, "height":2200, "patina": true, "reinforced": false},
+    {"width": 900, "height":2200, "patina": false, "reinforced": true},
+    {"width": 900, "height":2200, "patina": true, "reinforced": true}
+  ],
+  "box": [
     {"title":"БК-02* Брус коробочный перекленный МДФ + фанера 12 мм, с уплотнителем, под телескопический наличник"},
     {"title":"БК-03* Брус коробочный переклеенный МДФ + фанера 3 мм, с уплотнителем, под телескопический наличник"},
     {"title":"БК-04**  Брус коробочный переклеенный МДФ, с уплотнителем, компланарный"},
@@ -235,7 +253,7 @@
     {"title":"БК-22* Брус коробочный переклеенный МДФ + фанера 12+12 мм, с уплотнителем, с алюминиевой кромкой, под компланарный наличник с обратной стороны"},
     {"title":"БК-23** Брус коробочный переклеенный МДФ + фанера 12+12 мм, с уплотнителем, с алюминиевой кромкой, под отделку гипсокартоном с обратной стороны"}
   ],
-  "jambs": [
+  "jamb": [
     {"title":"Н-9** Наличник сферический, фанерованный строганным шпоном дуба(основа  МДФ)"},
     {"title":"Н-10** Наличник сферический телескопической конструкции, фанерованный строганным шпоном дуба (основа МДФ), ножка 14 мм"},
     {"title":"Н-11** Наличник плоский, фанерованный строганным шпоном дуба (основа МДФ)"},
@@ -248,7 +266,7 @@
     {"title":"КН-21* Наличник плоский компланарный (основа МДФ)"},
     {"title":"КН-22*** Наличник геометрический компланарный (основа МДФ)"}
   ],
-  "decorative_elements": [
+  "decorative_element": [
     {"title":"капитель 1"},
     {"title":"капитель 1-1 (только для Л32)"},
     {"title":"капитель 1-2 (только для Л34)"},
@@ -268,12 +286,12 @@
     {"title":"опора наличника"},
     {"title":"опора наличника, шпон+эмаль, с патиной по периметру"}
   ],
-  "docks":[
+  "dock":[
     {"title":"основа МДФ, фанерованный, 18 мм"},
     {"title":"основа МДФ, отделка с 3-х сторон, 16 мм"},
     {"title":"основа МДФ добор"}
   ],
-  "dops": [
+  "dop": [
     {"title":"алюминиевая кромка с 4-х сторон"},
     {"title":"витраж на стекле Сатин, 6 мм, с фацетом с двух сторон"},
     {"title":"накладной элемент \"косичка\" на нижней филенке"},
