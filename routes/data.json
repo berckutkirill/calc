@@ -215,6 +215,9 @@
     {"title":"джаз"},
     {"title":"васильки"}
   ],
+  "cornice_board": [{"title":"да"}],
+  "portal": [{"title":"да"}],
+  "threshold": [{"title":"да"}],
   "glass":[
     {"satin":true, "width": 8, "color": "бронза"},
     {"satin":true, "width": 8, "color": "бесцветный"},
@@ -225,6 +228,14 @@
     {"satin":true, "width": 4, "color": "бесцветный", "stained":true},
     {"satin":true, "width": 4, "color": "бронза", "stained":true},
     {"satin":true, "width": 6, "stained":true, "facet": 3}
+  ],
+  "feigned_plank":[
+    {"height": 2000, "width":37, "deep":12, "title":"37х12х2000 мм"},
+    {"height": 2300, "width":37, "deep":12, "title":"37х12х2300 мм"}
+  ],
+  "fourth":[
+    {"height": 2000, "title":"2000 мм"},
+    {"height": 2300, "title":"2300 мм"}
   ],
   "cloth_params":[
     {"width": 600, "height":2000, "patina": false, "reinforced": false},

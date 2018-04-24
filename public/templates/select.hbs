@@ -1,16 +1,15 @@
 <div class="form-group">
     <div class="row">
         <div class="col-6">
-            <label for="{{code}}">{{title}}</label>
+            <label for="{{prefix}}{{code}}">{{title}}</label>
         </div>
         <div class="col-6">
-            <select id="{{code}}" name="{{code}}" class="form-control" multiple>
+            <select id="{{prefix}}{{code}}" name="{{code}}" class="form-control" {{multiple}}>
                 {{# values}}
                 <option value="{{_id}}">{{title}}</option>
                 {{/values}}
             </select>
         </div>
     </div>
-
 </div>
 

@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const seriesSchema = new Schema({
-    title:{type:String, unique:true},
-    material: {type: Schema.Types.ObjectId, ref: 'Material'}
+    title:{type:String, unique:true}
 });
 
 mongoose.model('Series', seriesSchema);

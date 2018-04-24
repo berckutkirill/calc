@@ -6,11 +6,8 @@ const boxSchema = new Schema({
     width: Number,
     height: Number,
     deep: Number,
-    params: {
-        color: Schema.Types.ObjectId,
-        patina: Boolean,
-        furnish: Schema.Types.ObjectId
-    }
+    color: Schema.Types.ObjectId,
+    furnish: Schema.Types.ObjectId
 
 });
 mongoose.model('Box', boxSchema);

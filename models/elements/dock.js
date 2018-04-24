@@ -5,7 +5,7 @@ const dockSchema = new Schema({
     title:{type:String, unique:true},
     width: Number,
     height: Number,
-    params: {color: Schema.Types.ObjectId}
+    color: Schema.Types.ObjectId
 
 });
 

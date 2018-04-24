@@ -3,20 +3,21 @@
 <head>
     <title>{{title}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
-
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+    <script>
+        const data = {{{json data}}};
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/tether/1.3.1/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <script src="/data/lang.js"></script>
+    <script src="/javascripts/script.js"></script>
 </head>
 <body>
-<div class="container">
-    {{{body}}}
-</div>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/tether/1.3.1/js/tether.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
-<link rel='stylesheet' href='/stylesheets/style.css'/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
-<script src="/javascripts/script.js"></script>
-
+    <div class="container">
+        {{{body}}}
+    </div>
 </body>
 </html>

@@ -1,0 +1,7 @@
+<form class="ajaxForm" method="post" >
+    {{> select item_one prefix=prefix}}
+    {{> select item_two prefix=prefix multiple='multiple'}}
+    <input type="hidden" name="k_item_one" value="{{k_item_one}}">
+    <input type="hidden" name="k_item_two" value="{{k_item_two}}">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

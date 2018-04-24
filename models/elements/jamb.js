@@ -7,7 +7,7 @@ const jambSchema = new Schema({
     width: Number,
     height: Number,
     deep: Number,
-    params: {color: Schema.Types.ObjectId}
+    color: Schema.Types.ObjectId
 
 });
 

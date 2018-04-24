@@ -1,7 +1,27 @@
-<script>
-    var data = {{{json data}}};
-</script>
-<form class="ajaxForm" action="/addDoor">
-    {{> param}}
+<form class="ajaxForm" before-send="subsect.processParams" after-send="subsect.repairParams" action="/addDoor">
+    {{> select data.fields.material}}
+    {{> select data.fields.series}}
+    {{> select data.fields.model}}
+    <div>
+        <h2>Полотно:</h2>
+        <div class="cloth-params">
+
+        </div>
+    </div>
+    {{> select data.fields.box}}
+    {{> select data.fields.jamb}}
+    {{> select data.fields.dock}}
+    {{> select data.fields.decorative_element}}
+    {{> checkbox data.fields.feigned_plank checked="checked"}} <!--  b -->
+    {{> checkbox data.fields.fourth checked="checked"}} <!--  b -->
+    {{> checkbox data.fields.threshold checked="checked"}} <!-- b -->
+    {{> checkbox data.fields.portal checked="checked"}} <!-- b -->
+    {{> checkbox data.fields.cornice_board checked="checked"}} <!-- b -->
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+<script>
+    const classParams = 'cloth-params';
+    const keyParams = 'cloth';
+    insertAsSelects($(`.${classParams}`), data[keyParams], ['__v', 'title', 'model']);
+    var subsect = new Subsect(data, classParams, keyParams);
+</script>

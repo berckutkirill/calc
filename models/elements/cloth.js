@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
+const Helper = require("../Helper");
 const Schema = mongoose.Schema;
 function getTitle(ob_title) {
-    return `${ob_title.material}x${ob_title.model}`;
+    return `${ob_title.model}x${ob_title.color}x${ob_title.glass}x${ob_title.lacobel}x${ob_title.type}x${ob_title.furnish}x${ob_title.params}x${ob_title.dop}`;
 }
 const fields = {
     title:{type:Object, unique:true, required:true, get:getTitle},
-    material: {type: Schema.Types.ObjectId, ref: 'Material', title: "Материал"},
-    series: {type: Schema.Types.ObjectId, ref: 'Series', title: "Серия"},
     model: {type: Schema.Types.ObjectId, ref: 'Model', title: "Модель"},
     color: {type: Schema.Types.ObjectId, ref: 'Color', title: "Цвет"},
     glass: {type: Schema.Types.ObjectId, ref: 'Glass', title: "Стекло"},
@@ -96,6 +95,7 @@ clothSchema.statics.getAllComponents = function () {
         }
 
         Promise.all(promises).then(function () {
+            Helper.alphabetSort(data);
             resolve(data);
         })
     })

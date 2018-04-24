@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const portalSchema = new Schema({
-    width: Number,
+    title: {type:String, unique: true}
 });
 
 mongoose.model('Portal', portalSchema);

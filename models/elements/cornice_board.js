@@ -2,13 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const corniceBoardSchema = new Schema({
-    width: Number,
-    params: {
-        color: Schema.Types.ObjectId,
-        patina: Boolean,
-        furnish: Schema.Types.ObjectId
-    }
-
+    title: {type: String, unique:true}
 });
 
 mongoose.model('CorniceBoard', corniceBoardSchema);
