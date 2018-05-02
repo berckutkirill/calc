@@ -1,9 +1,9 @@
 {{> nodeForm prefix='f_' k_item_one='material' k_item_two='series' item_one=data.material item_two=data.series}}
 {{> nodeForm prefix='s_' k_item_one='series' k_item_two='model' item_one=data.series item_two=data.model}}
 <script>
-    const activeElements = [
+    const nodes = new Nodes(data, [
         {prefix:'f_', parent:'material', child:'series'},
         {prefix:'s_', parent:'series', child:'model'}
-    ];
-    initRelations(activeElements)
+    ]);
+    nodes.initRelations();
 </script>

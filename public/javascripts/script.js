@@ -8,18 +8,25 @@ function init() {
         const action = form.attr('action') ? $(this).attr('action') : location.href;
         const beforeSendF = form.attr('before-send') ? $(this).attr('before-send') : null;
         const afterSendF = form.attr('after-send') ? $(this).attr('after-send') : null;
-        executeFunctionByName(beforeSendF, window, form);
+        if(beforeSendF) {
+            executeFunctionByName(beforeSendF, window, form);
+        }
         $.ajax({
             url: action,
             data: $(this).serialize(),
             method: 'post'
         }).always(function (res) {
-            executeFunctionByName(afterSendF, window, form);
+            if(afterSendF) {
+                executeFunctionByName(afterSendF, window, form);
+            }
         })
     });
 }
 function executeFunctionByName(functionName, context /*, args */) {
     var args = Array.prototype.slice.call(arguments, 2);
+    if(!functionName) {
+        return;
+    }
     var namespaces = functionName.split(".");
     var func = namespaces.pop();
     for(var i = 0; i < namespaces.length; i++) {
@@ -57,34 +64,7 @@ function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-function initRelations(activeElements) {
-    activeElements.forEach(function (item) {
-        if (!item.node) {
-            item.node = `${item.parent}_${item.child}`;
-        }
-        if (data[item.node] && data[item.node].values) {
-            setRelations(item);
-            $(`#${item['prefix']}${item['parent']}`).change(function () {
-                setRelations(item);
-            });
-        }
-    });
-}
 
-function setRelations(item) {
-    const prefix = item['prefix'];
-    const parent = item['parent'];
-    const child = item['child'];
-    const values = data[item.node].values;
-    const _id = $(`#${prefix}${parent}`).val();
-
-    $(`#${prefix}${child}`).val(null);
-    values.map(function (item) {
-        if (item[parent] && item[parent] === _id) {
-            $(`#${prefix}${child} option[value="${item[child]}"]`).prop('selected', true);
-        }
-    });
-}
 
 function getVariants(item, exclude) {
     exclude = exclude ? exclude : ['_id', 'title'];
@@ -210,5 +190,68 @@ class Subsect {
         it.forEach(function (item) {
             form.append(`<input type='hidden' name='${self.keyParams}' value='${item._id}' />`);
         });
+    }
+}
+
+class Nodes {
+    constructor(data, activeElements, filter) {
+        this.data = data;
+        this.activeElements = activeElements;
+        this.filter = filter;
+    }
+    initRelations() {
+        const self = this;
+        self.activeElements.forEach(function (item) {
+            if (!item.node) {
+                item.node = `${item.parent}_${item.child}`;
+            }
+            item['prefix'] = item['prefix'] ? item['prefix'] : '';
+            if (self.data[item.node] && self.data[item.node].values) {
+                self.setRelations(item);
+                $(`#${item['prefix']}${item['parent']}`).change(function () {
+                    self.setRelations(item);
+                });
+            }
+        });
+    }
+    filterChilds(prefix, parent, child, _id, values) {
+        const selectedValue = $(`#${prefix}${child}`).val();
+        $(`#${prefix}${child} option`).prop('disabled', true);
+
+        let clearSelected = true;
+        values.map(function (item) {
+            if (item[parent] && item[parent] === _id) {
+                if(selectedValue === item[child]) {
+                    clearSelected = false;
+                }
+                $(`#${prefix}${child} option[value="${item[child]}"]`).prop('disabled', false);
+            }
+        });
+        if(clearSelected) {
+            $(`#${prefix}${child}`).val(null).change();
+        }
+    }
+    selectChilds(prefix, parent, child, _id, values) {
+        $(`#${prefix}${child}`).val(null);
+        values.map(function (item) {
+            if (item[parent] && item[parent] === _id) {
+                $(`#${prefix}${child} option[value="${item[child]}"]`).prop('selected', true);
+            }
+        });
+    }
+    setRelations(item) {
+        const self = this;
+
+        const prefix = item['prefix'];
+        const parent = item['parent'];
+        const child = item['child'];
+        const values = self.data[item.node].values;
+        const _id = $(`#${prefix}${parent}`).val();
+        if(self.filter) {
+            self.filterChilds(prefix, parent, child, _id, values);
+        } else {
+            self.selectChilds(prefix, parent, child, _id, values);
+        }
+
     }
 }

@@ -6,7 +6,6 @@ const data = JSON.parse(fs.readFileSync('./routes/data.json', 'utf8'));
 for(const item of Helper.AllModels) {
     const Model = mongoose.model(item.schema);
     if (!data[item.code]) {
-        console.log(item.code);
         continue;
     }
     data[item.code].forEach(function (item) {

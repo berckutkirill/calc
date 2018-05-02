@@ -22,6 +22,17 @@
 <script>
     const classParams = 'cloth-params';
     const keyParams = 'cloth';
-    insertAsSelects($(`.${classParams}`), data[keyParams], ['__v', 'title', 'model']);
-    var subsect = new Subsect(data, classParams, keyParams);
+    insertAsSelects($(`.${classParams}`), data['fields'][keyParams], ['__v', 'title', 'model']);
+    var subsect = new Subsect(data['fields'], classParams, keyParams);
+</script>
+
+
+<script>
+    const linkedElements = [
+        {parent:'material', child:'series'},
+        {parent:'series', child:'model'}
+    ];
+    const nodes = new Nodes(Object.assign(data['fields'], data['nodes']), linkedElements, true);
+
+    nodes.initRelations();
 </script>

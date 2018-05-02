@@ -54,7 +54,7 @@ module.exports = {
         return new Promise(function (resolve, reject) {
             model.remove(data, function (error, res) {
                 if (error) {
-                    console.log(error);
+                    console.error(error);
                     reject(error);
                 }
                 resolve(res);
