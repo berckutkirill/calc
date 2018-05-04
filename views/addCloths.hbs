@@ -1,5 +1,5 @@
 
-<form class="ajaxForm" before-send="subsect.processParams" after-send="subsect.repairParams" method="post" action="/addCloth">
+<form class="ajaxForm" method="post" action="/addCloth">
     {{> select data.model multiple='multiple'}}
     {{> select data.color multiple='multiple'}}
     {{> select data.glass multiple='multiple'}}
@@ -7,13 +7,12 @@
     {{> select data.type multiple='multiple'}}
     {{> select data.furnish multiple='multiple'}}
     {{> select data.dop multiple='multiple'}}
-    <div class="params"></div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
 <script>
-    const classParams = 'params';
-    const keyParams = 'params';
-    insertAsSelects($(`.${classParams}`), data[keyParams]);
-    var subsect = new Subsect(data, classParams, keyParams);
+    // const classParams = 'params';
+    // const keyParams = 'params';
+    // insertAsSelects($(`.${classParams}`), data[keyParams]);
+    // var subsect = new Subsect(data, classParams, keyParams);
 </script>

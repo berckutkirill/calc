@@ -11,6 +11,7 @@ const hbs = require("hbs");
 hbs.registerHelper('json', function(context) {
     return JSON.stringify(context);
 });
+
 var app = express();
 
 // view engine setup

@@ -1,5 +1,10 @@
 Handlebars.templates = [];
-
+Handlebars.registerHelper('lookup', function(obj, field) {
+    if(obj[field] && obj[field].title) {
+        return obj[field].title;
+    }
+    return obj[field];
+});
 function init() {
     $(".ajaxForm").on('submit', function (e) {
         e.preventDefault();
@@ -36,7 +41,28 @@ function executeFunctionByName(functionName, context /*, args */) {
 }
 $(function () {
     init();
-})
+});
+
+function toPandasFormat(data) {
+    const result  = {headers:[], items:[]};
+    for (const i in data.items) {
+        const item = data.items[i];
+        for (const key in item) {
+            if(result.headers.indexOf(key) === -1){
+                result.headers.push(key);
+            }
+        }
+    }
+    for (const i in data.items) {
+        const dataItem = data.items[i];
+        const item = [];
+        result.headers.forEach(function (headerItem) {
+            item.push(dataItem[headerItem]);
+        });
+        result.items.push(item);
+    }
+    return result;
+}
 
 function textToBool(value) {
     if (value === null || typeof value === 'undefined' || value === 'false' || value === '') {
@@ -118,6 +144,7 @@ function getTemplate(tpl) {
         });
     })
 }
+
 function insertAsSelects(container, item, exclude) {
     const variants = getVariants(item);
     exclude = exclude ? exclude : ['__v', 'title'];

@@ -1,0 +1,14 @@
+<table>
+    {{#each columns}}
+        <th>{{this}}</th>
+    {{/each}}
+
+    {{#each items as |value key|}}
+    <tr>
+        {{#each ../columns as |cvalue ckey|}}
+        <td>{{../lookup value cvalue}}</td>
+        {{/each}}
+
+    </tr>
+    {{/each}}
+</table>

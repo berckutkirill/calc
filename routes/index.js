@@ -20,6 +20,26 @@ router.get('/updateNode', function (req, res) {
     });
 });
 
+router.get('/updateCloth', function (req, res) {
+    mongoose.model('Cloth').find({})
+        .populate('model', 'title')
+        .populate('color', 'title')
+        .populate('glass')
+        .populate('furnish', 'title')
+        .populate('lacobel', 'title')
+        .populate('type', 'title')
+        .populate('params', 'title')
+        .populate('dop', 'title')
+        .exec(function (err, cloth) {
+        let data;
+        if (err) {
+            data = {error: err};
+        } else {
+            data = {items: cloth}
+        }
+        res.render('updateCloth', {title: 'Express', 'data': data});
+    });
+});
 router.get('/addCloth', function (req, res) {
     mongoose.model('Cloth').getAllComponents().then(function (data) {
         res.render('addCloths', {title: 'Express', 'data': data});
@@ -28,7 +48,7 @@ router.get('/addCloth', function (req, res) {
 router.post('/addCloth', function (req, res) {
     const keys = Object.keys(req.body);
     const arr = Object.values(req.body).map(item => {
-        if(!Array.isArray(item)) {
+        if (!Array.isArray(item)) {
             return [item];
         }
         return item;
@@ -40,7 +60,7 @@ router.post('/addCloth', function (req, res) {
         for (const j in keys) {
             item[keys[j]] = data[i][j];
         }
-        mongoose.model('Cloth').create(item,function (error) {
+        mongoose.model('Cloth').create(item, function (error) {
             if (error && error.code !== 11000) {
                 throw new Error(error.message)
             }
@@ -57,13 +77,13 @@ router.get('/addDoor', function (req, res) {
     promises.push(mongoose.model('baseDoor').getComponents());
     Promise.all(promises).then(function (data) {
         const obj = {fields: data[1], nodes: data[0]};
-        res.render('addDoor', {title: 'Express', 'data':obj});
+        res.render('addDoor', {title: 'Express', 'data': obj});
     });
 });
 router.post('/addDoor', function (req, res) {
     const keys = Object.keys(req.body);
     const arr = Object.values(req.body).map(item => {
-        if(!Array.isArray(item)) {
+        if (!Array.isArray(item)) {
             return [item];
         }
         return item;
@@ -78,7 +98,6 @@ router.post('/addDoor', function (req, res) {
     }
     res.json({})
 });
-
 
 
 module.exports = router;

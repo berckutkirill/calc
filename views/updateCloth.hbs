@@ -1,0 +1,11 @@
+{{#if data.error}}
+    {{> error data.error}}
+{{/if}}
+<div class="table-block">
+
+</div>
+<script>
+    getTemplate('table').then(function () {
+        $(".table-block").append(Handlebars.templates["table"]({items: data.items, columns:["model", "color",  "furnish", "glass"]}));
+    });
+</script>

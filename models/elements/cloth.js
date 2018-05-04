@@ -1,22 +1,24 @@
 const mongoose = require('mongoose');
 const Helper = require("../Helper");
 const Schema = mongoose.Schema;
-function getTitle(ob_title) {
-    return `${ob_title.model}x${ob_title.color}x${ob_title.glass}x${ob_title.lacobel}x${ob_title.type}x${ob_title.furnish}x${ob_title.params}x${ob_title.dop}`;
-}
+
 const fields = {
-    title:{type:Object, unique:true, required:true, get:getTitle},
     model: {type: Schema.Types.ObjectId, ref: 'Model', title: "Модель"},
     color: {type: Schema.Types.ObjectId, ref: 'Color', title: "Цвет"},
     glass: {type: Schema.Types.ObjectId, ref: 'Glass', title: "Стекло"},
     lacobel: {type: Schema.Types.ObjectId, ref: 'Lacobel', title: "Лакобель"},
     type: {type: Schema.Types.ObjectId, ref: 'ClothType', title: "Тип"},
-    furnish: {type: Schema.Types.ObjectId, ref: 'Furnish', title: "Фурнитура"},
+    furnish: {type: Schema.Types.ObjectId, ref: 'Furnish', title: "Отделка"},
     params: {type: Schema.Types.ObjectId, ref: 'ClothParams', title: "Параметры"},
     dop: {type: Schema.Types.ObjectId, ref: 'Dop', title: "Дополнительно"}
 };
 const notTitleChunks = ["_id", "title"];
 const clothSchema = new Schema(fields);
+clothSchema
+    .virtual('title')
+    .get(function () {
+        return this;
+    });
 
 clothSchema.pre('validate', function (next) {
     const promises = [];
