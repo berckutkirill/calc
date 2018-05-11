@@ -1,0 +1,8 @@
+<ul class="dropdown-menu" data-code="{{code}}">
+    {{#each values}}
+    <li class="dropdown-item p-0">
+        <input type="radio" class="custom-control-input" id="{{../prefix}}{{../code}}{{@index}}" name="{{../code}}" value="{{_id}}" />
+        <label for="{{../prefix}}{{../code}}{{@index}}" class="d-block px-2 py-1 m-0 c-pointer">{{title}}</label>
+    </li>
+    {{/each}}
+</ul>

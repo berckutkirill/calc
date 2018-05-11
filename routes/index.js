@@ -21,24 +21,31 @@ router.get('/updateNode', function (req, res) {
 });
 
 router.get('/updateCloth', function (req, res) {
-    mongoose.model('Cloth').find({})
-        .populate('model', 'title')
-        .populate('color', 'title')
-        .populate('glass')
-        .populate('furnish', 'title')
-        .populate('lacobel', 'title')
-        .populate('type', 'title')
-        .populate('params', 'title')
-        .populate('dop', 'title')
-        .exec(function (err, cloth) {
-        let data;
-        if (err) {
-            data = {error: err};
-        } else {
-            data = {items: cloth}
-        }
-        res.render('updateCloth', {title: 'Express', 'data': data});
-    });
+    const needs = ['model', 'color', 'furnish', 'glass'];
+    const promises = [];
+    promises.push(Helper.getAll(needs));
+    promises.push(new Promise(function (resolve, reject) {
+        mongoose.model('Cloth').find({})
+            .populate('model', 'title')
+            .populate('color', 'title')
+            .populate('glass')
+            .populate('furnish', 'title')
+            .populate('lacobel', 'title')
+            .populate('type', 'title')
+            .populate('params', 'title')
+            .populate('dop', 'title')
+            .exec(function (err, cloth) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(cloth);
+                }
+            });
+    }));
+    Promise.all(promises).then(function (data) {
+        res.render('updateCloth', {title: 'Express', 'data': {all:data[0], items:data[1]}});
+    })
+
 });
 router.get('/addCloth', function (req, res) {
     mongoose.model('Cloth').getAllComponents().then(function (data) {

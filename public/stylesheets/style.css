@@ -9,3 +9,17 @@ a {
 select[multiple] {
   height: 300px;
 }
+
+.custom-control-input:checked+label {
+  background: #0275d8;
+  color: #fff;
+}
+.c-pointer {
+  cursor: pointer;
+}
+.table-hover-td td:hover{
+ background-color: rgba(0,0,0,.075);
+}
+.dropdown-menu.show {
+  display: block;
+}

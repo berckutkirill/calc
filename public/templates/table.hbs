@@ -1,14 +1,16 @@
-<table>
+<table class="table table-bordered table-hover-td table-dark" >
+    <thead>
     {{#each columns}}
-        <th>{{this}}</th>
+        <th  data-key="{{code}}">{{title}}</th>
     {{/each}}
-
+    </thead>
+    <tbody>
     {{#each items as |value key|}}
-    <tr>
+    <tr data-id="{{value._id}}">
         {{#each ../columns as |cvalue ckey|}}
-        <td>{{../lookup value cvalue}}</td>
+        <td data-code="{{cvalue.code}}" data-id="{{../lookup value cvalue.code '_id'}}" class="c-pointer">{{../lookup value cvalue.code 'title'}}</td>
         {{/each}}
-
     </tr>
     {{/each}}
+    </tbody>
 </table>
