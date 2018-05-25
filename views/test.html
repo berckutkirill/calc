@@ -1,0 +1,13 @@
+$.ajax({
+url: 'send.php',
+data: $(this).serialize(),
+type: "post",
+success: function (data) {
+$(".preloader").hide();
+$(".submit-button").removeClass('sending');
+$(".button-text").show();
+$('.application-popup').removeClass('requisites-popup-open').css('transition', '0s');
+$('.requisites-popup').removeClass('requisites-popup-open').css('transition', '0s');
+$('.application-popup-thanks').css({'visibility': 'visible', 'opacity': '1', 'transition': '0.3s'});
+}
+});

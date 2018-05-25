@@ -13,7 +13,7 @@ glassSchema
     .virtual('title')
     .get(function () {
         return (this.color ? this.color : "") + (this.stained ? " витраж":"") +
-            (this.facet ? " фацет": "") + (this.roasted ? " закалённое" : "") +
+            (this.facet ? " фацет": "") + (this.roasted ? " калённое" : "") +
             (this.width ? " "+ this.width + "мм" : "");
     });
 mongoose.model('Glass', glassSchema);

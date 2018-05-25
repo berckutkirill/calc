@@ -23,9 +23,8 @@
                     {title: LNG.translate("glass"), code: 'glass'}
                 ]
             }));
-            const editTable = new EditTable($(".table-block table"), $('.dropdown-menu'));
-
+            const editTable = new EditTable($(".table-block table"), $('.dropdown-menu'), data.items);
+            $(".table-block table").DataTable();
         })
     }, this)
-
 </script>

@@ -221,6 +221,8 @@
   "portal": [{"title":"да"}],
   "threshold": [{"title":"да"}],
   "glass":[
+    {"satin":true, "width": 8, "color": "бронза", "roasted":true},
+    {"satin":true, "width": 8, "color": "бесцветный", "roasted":true},
     {"satin":true, "width": 8, "color": "бронза"},
     {"satin":true, "width": 8, "color": "бесцветный"},
     {"satin":true, "width": 8, "color": "бесцветный", "stained":true},

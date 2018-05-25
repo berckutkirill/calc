@@ -1,15 +1,25 @@
-<table class="table table-bordered table-hover-td table-dark" >
+<table class="table table-bordered table-hover-td " >
     <thead>
     {{#each columns}}
-        <th  data-key="{{code}}">{{title}}</th>
+        <th data-key="{{code}}">{{title}}</th>
     {{/each}}
+        <th></th>
     </thead>
     <tbody>
     {{#each items as |value key|}}
-    <tr data-id="{{value._id}}">
+    <tr data-id="{{value._id}}" class="trow">
         {{#each ../columns as |cvalue ckey|}}
-        <td data-code="{{cvalue.code}}" data-id="{{../lookup value cvalue.code '_id'}}" class="c-pointer">{{../lookup value cvalue.code 'title'}}</td>
+        <td data-code="{{cvalue.code}}" data-id="{{../lookup value cvalue.code '_id'}}" class="c-pointer td">
+            <div class="row">
+                <div class="col-8 text-left"><span class="text">{{../lookup value cvalue.code 'title'}}</span></div>
+                <div class="col-4 text-right"><span class="clear oi oi-delete {{#if_not-lookup value cvalue.code 'title'}}hidden{{/if_not-lookup}}"></span></div>
+            </div>
+        </td>
         {{/each}}
+        <td class="controls td">
+            <span class="save disabled oi oi-file c-pointer"></span>
+            <span class="remove oi-delete oi c-pointer"></span>
+        </td>
     </tr>
     {{/each}}
     </tbody>

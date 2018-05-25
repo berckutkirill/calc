@@ -11,13 +11,41 @@ router.post('/updateNode', function (req, res) {
     Helper.replaceNodes(req.body).then(function (data) {
         res.json(data);
     });
-
 });
 router.get('/updateNode', function (req, res) {
     const needs = ['model', 'series', 'material', 'material_series', 'series_model'];
     Helper.getAll(needs).then(function (data) {
         res.render('mainNodes', {title: 'Express', 'data': data});
     });
+});
+
+router.post('/updateCloth', function (req, res) {
+    const oid = new mongoose.Types.ObjectId(req.body._id);
+    delete req.body._id;
+    for(const i in req.body) {
+        if(req.body[i] === '') {
+            req.body[i] = null;
+        }
+    }
+    const updObj = req.body;
+    mongoose.model('Cloth').findByIdAndUpdate(oid, {$set:updObj}, {new:true}, function (err, cloth) {
+        if(err) {
+            return res.json({error: true, message:err});
+        }
+        return res.json({cloth:cloth});
+
+    })
+});
+
+router.post('/deleteCloth', function (req, res) {
+    const oid = new mongoose.Types.ObjectId(req.body._id);
+    mongoose.model('Cloth').remove({ _id:oid}, function (err) {
+        if(err) {
+            return res.json({error: true, message:err});
+        }
+        return res.json({deletedId: req.body._id});
+
+    })
 });
 
 router.get('/updateCloth', function (req, res) {
