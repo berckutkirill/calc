@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"er.glasses"},{"v":1,"unique":true,"key":{"color":1,"satin":1,"stained":1,"width":1,"facet":1,"roasted":1},"name":"color_1_satin_1_stained_1_width_1_facet_1_roasted_1","ns":"er.glasses","background":true}]}
