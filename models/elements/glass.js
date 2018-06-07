@@ -7,7 +7,9 @@ const glassSchema = new Schema({
     width: Number,
     facet: Number,
     roasted: Boolean
-}, { toJSON: { virtuals: true }});
+});
+glassSchema.set('toObject', { virtuals: true });
+glassSchema.set('toJSON', { virtuals: true });
 glassSchema.index({ color: 1, satin: 1, stained: 1, width: 1, facet: 1 , roasted: 1 }, { unique: true });
 glassSchema
     .virtual('title')

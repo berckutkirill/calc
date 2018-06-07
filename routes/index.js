@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Helper = require('../models/Helper');
 const router = express.Router();
+
 require('./init_db');
 
 router.get('/', function (req, res) {
@@ -37,6 +38,16 @@ router.post('/updateCloth', function (req, res) {
     })
 });
 
+router.post('/deleteDoor', function (req, res) {
+    const oid = new mongoose.Types.ObjectId(req.body._id);
+    mongoose.model('baseDoor').remove({ _id:oid}, function (err) {
+        if(err) {
+            return res.json({error: true, message:err});
+        }
+        return res.json({deletedId: req.body._id});
+
+    })
+});
 router.post('/deleteCloth', function (req, res) {
     const oid = new mongoose.Types.ObjectId(req.body._id);
     mongoose.model('Cloth').remove({ _id:oid}, function (err) {
@@ -105,6 +116,52 @@ router.post('/addCloth', function (req, res) {
     res.json(req.body);
 });
 
+router.get('/updateDoor', function (req, res) {
+const needs = ['model', 'cloth', 'box', 'jamb', 'dock', 'threshold',
+        'portal', 'cornice_board',  'feigned_plank',  'fourth', 'decorative_element'];
+    const promises = [];
+    const page = req.params.page ? req.params.page : 1;
+    promises.push(Helper.getAll(needs));
+    promises.push(new Promise(function (resolve, reject) {
+        mongoose.model('baseDoor').paginate({}, {page: page, limit: 100,
+            populate: [['model', 'title'],
+                {path: 'cloth', populate: [['model', 'title'], 'glass', ['color', 'title'], ['furnish', 'title']]},
+                'glass',
+                ['box', 'title'],
+                ['jamb', 'title'],
+                ['feigned_plank', 'title'],
+                ['dock', 'title'],
+                ['decorative_element', 'title'],
+                ['threshold', 'title'],
+                ['portal', 'title'],
+                ['cornice_board', 'title'],
+                ['fourth', 'title']
+            ]
+        }).then(function (cloth) {
+            resolve(cloth);
+        });
+    }));
+    Promise.all(promises).then(function (data) {
+        res.render('updateDoor', {title: 'Express', 'data': {all:data[0], items:data[1]}});
+    })
+});
+router.post('/updateDoor', function (req, res) {
+    const oid = new mongoose.Types.ObjectId(req.body._id);
+    delete req.body._id;
+    for (const i in req.body) {
+        if (req.body[i] === '') {
+            req.body[i] = null;
+        }
+    }
+    const updObj = req.body;
+    mongoose.model('baseDoor').findByIdAndUpdate(oid, {$set: updObj}, {new: true}, function (err, door) {
+        if (err) {
+            return res.json({error: true, message: err});
+        }
+        return res.json({door: door});
+
+    })
+});
 router.get('/addDoor', function (req, res) {
     const needs = ['material_series', 'series_model'];
     const promises = [];

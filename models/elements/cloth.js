@@ -14,10 +14,19 @@ const fields = {
 };
 const notTitleChunks = ["_id", "title"];
 const clothSchema = new Schema(fields);
+clothSchema.set('toObject', { virtuals: true });
+clothSchema.set('toJSON', { virtuals: true });
 clothSchema
     .virtual('title')
     .get(function () {
-        return this;
+        let titleStr = "";
+        const titles = ['model', 'color', 'glass', 'lacobel', 'type', 'furnish', 'dop', 'params'];
+        for(const key of titles) {
+            if(this[key] && this[key]['title']) {
+                titleStr += " "+this[key]['title'];
+            }
+        }
+        return titleStr.trim();
     });
 
 clothSchema.pre('validate', function (next) {

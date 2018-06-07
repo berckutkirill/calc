@@ -231,14 +231,8 @@
     {"satin":true, "width": 4, "color": "бронза", "stained":true},
     {"satin":true, "width": 6, "stained":true, "facet": 3}
   ],
-  "feigned_plank":[
-    {"height": 2000, "width":37, "deep":12, "title":"37х12х2000 мм"},
-    {"height": 2300, "width":37, "deep":12, "title":"37х12х2300 мм"}
-  ],
-  "fourth":[
-    {"height": 2000, "title":"2000 мм"},
-    {"height": 2300, "title":"2300 мм"}
-  ],
+  "feigned_plank":[{"title":"да"}],
+  "fourth":[{"title":"да"}],
   "cloth_params":[
     {"width": 600, "height":2000, "patina": false, "reinforced": false},
     {"width": 600, "height":2000, "patina": true, "reinforced": false},
@@ -258,6 +252,7 @@
     {"width": 900, "height":2200, "patina": true, "reinforced": true}
   ],
   "box": [
+    {"title":"БК-01* Брус коробочный, фанерованный  строганным шпоном дуба, с уплотнителем, (основа – сращенный брус хвойных пород)"},
     {"title":"БК-02* Брус коробочный перекленный МДФ + фанера 12 мм, с уплотнителем, под телескопический наличник"},
     {"title":"БК-03* Брус коробочный переклеенный МДФ + фанера 3 мм, с уплотнителем, под телескопический наличник"},
     {"title":"БК-04**  Брус коробочный переклеенный МДФ, с уплотнителем, компланарный"},

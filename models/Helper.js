@@ -166,6 +166,11 @@ module.exports = {
             }
         }
     },
+    allUniquePossibleCases: function (arr) {
+        const cases = this.allPossibleCases(arr);
+        const unique = [...new Set(cases.map(item => item))];
+        return unique;
+    },
     allPossibleCases: function (arr) {
         if (!arr || arr.length === 0) {
             return []

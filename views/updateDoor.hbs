@@ -1,0 +1,37 @@
+{{#if data.error}}
+{{> error data.error}}
+{{/if}}
+<div class="table-block">
+
+</div>
+<div class="custom-r_select-block"></div>
+<script>
+    loader.onLoad(function () {
+        const promises = [];
+        promises.push(getPartial('dropdownMenu'), getTemplate('table'));
+        Promise.all(promises).then(function (result) {
+            for (const i in data.all) {
+                $(".custom-r_select-block").append(result[0](Object.assign(data.all[i], {prefix:'f_'})));
+            }
+
+            $(".table-block").append(result[1]({
+                items: data.items.docs,
+                columns: [
+                    {title: LNG.translate("model"), code: 'model'},
+                    {title: LNG.translate("cloth"), code: 'cloth'},
+                    {title: LNG.translate("box"), code: 'box'},
+                    {title: LNG.translate("jamb"), code: 'jamb'},
+                    {title: LNG.translate("dock"), code: 'dock'},
+                    {title: LNG.translate("decorative_element"), code: 'decorative_element'},
+                    {title: LNG.translate("feigned_plank"), code: 'feigned_plank'},
+                    {title: LNG.translate("fourth"), code: 'fourth'},
+                    {title: LNG.translate("threshold"), code: 'threshold'},
+                    {title: LNG.translate("portal"), code: 'portal'},
+                    {title: LNG.translate("cornice_board"), code: 'cornice_board'},
+                ]
+            }));
+            const editTable = new EditTable($(".table-block table"), $('.dropdown-menu'), data.items.docs, 'Door');
+            // $(".table-block table").DataTable();
+        })
+    }, this)
+</script>

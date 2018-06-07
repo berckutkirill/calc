@@ -1,49 +1,68 @@
 class Subsect {
-    constructor(data, classParams, keyParams) {
+    constructor(data, classParams, keyParams, dopSelects) {
         this.data = data;
         this.classParams = classParams;
         this.keyParams = keyParams;
+        this.dopSelects = dopSelects ? dopSelects : [];
     }
 
     repairParams(form) {
+        const repF = function ($el) {
+            const val = JSON.parse($el.attr('data-val'));
+            $el.val(val);
+        };
         form.find(`.${this.classParams} select`).each(function (k, v) {
-            const val = JSON.parse($(this).attr('data-val'));
-            $(this).val(val);
+            repF($(this));
+        });
+        this.dopSelects.forEach(function ($el) {
+            repF($el);
         })
     }
+    procF($el, selected, clearVal) {
+        const name = $el.attr('name');
+        const isBool = isBoolSelect($el);
+        let value = $el.val();
 
+        selected[name] = [];
+        if (Array.isArray(value)) {
+            if (value.length === 0 && isBool) {
+                selected[name] = [false];
+            } else {
+                for (const i in value) {
+                    selected[name].push(isBool ? textToBool(value[i]) : isNumeric(value[i]) ? parseInt(value[i]) : value[i]);
+                }
+            }
+        } else {
+            selected[name].push(textToBool(isBool ? textToBool(value) : isNumeric(value) ? parseInt(value) : value));
+        }
+        $el.attr('data-val', JSON.stringify(value));
+        if(clearVal) {
+            $el.val(null);
+        }
+    };
     processParams(form) {
         const selected = {};
-        $(`.${this.classParams} select`).each(function (k, v) {
-            const name = $(this).attr('name');
-            const isBool = isBoolSelect($(this));
-            let value = $(this).val();
+        const self =this;
 
-            selected[name] = [];
-            if (Array.isArray(value)) {
-                if (value.length === 0 && isBool) {
-                    selected[name] = [false];
-                } else {
-                    for (const i in value) {
-                        selected[name].push(isBool ? textToBool(value[i]) : isNumeric(value[i]) ? parseInt(value[i]) : value[i]);
-                    }
-                }
-            } else {
-                selected[name].push(textToBool(isBool ? textToBool(value) : isNumeric(value) ? parseInt(value) : value));
-            }
-            $(this).attr('data-val', JSON.stringify(value));
-            $(this).val(null);
+        this.dopSelects.forEach(function ($el) {
+            self.procF($el, selected);
+        });
+        $(`.${this.classParams} select`).each(function (k, v) {
+            self.procF($(this), selected, true);
         });
         const it = this.data[this.keyParams].values.filter(function (item) {
             for (const i in selected) {
-                if (Array.isArray(selected[i]) && selected[i].indexOf(item[i]) === -1) {
+                const id = typeof item[i] === "object" ? item[i] !== null ? item[i]._id : item[i] : null;
+                if(id === null) {
+                    continue;
+                }
+                if (Array.isArray(selected[i]) && selected[i].indexOf(id) === -1) {
                     return false;
                 }
             }
             return true;
         });
         form.find(`input[name="${this.keyParams}"]`).remove();
-        const self = this;
         it.forEach(function (item) {
             form.append(`<input type='hidden' name='${self.keyParams}' value='${item._id}' />`);
         });
@@ -53,6 +72,7 @@ class Subsect {
 class Nodes {
     constructor(data, activeElements, filter) {
         this.data = data;
+        this.onChangeCb = {};
         this.activeElements = activeElements;
         this.filter = filter;
     }
@@ -72,7 +92,14 @@ class Nodes {
             }
         });
     }
-
+    runChange(name) {
+        if(this.onChangeCb[name]) {
+            this.onChangeCb[name].call(this);
+        }
+    }
+    onChange(name, func) {
+        this.onChangeCb[name]= func;
+    };
     filterChilds(prefix, parent, child, _id, values) {
         const selectedValue = $(`#${prefix}${child}`).val();
         $(`#${prefix}${child} option`).prop('disabled', true);
@@ -87,8 +114,9 @@ class Nodes {
             }
         });
         if (clearSelected) {
-            $(`#${prefix}${child}`).val(null).change();
+            $(`#${prefix}${child}`).val(null);
         }
+        this.runChange(`${prefix}${child}`);
     }
 
     selectChilds(prefix, parent, child, _id, values) {
@@ -172,9 +200,10 @@ const Helper = {
 };
 
 class EditTable {
-    constructor(table, selects, data) {
+    constructor(table, selects, data, mainClass) {
         const self = this;
         this.data = data;
+        this.mainClass = mainClass;
         this.table = table;
         this.currentTD = null;
         this.selects = selects;
@@ -195,13 +224,12 @@ class EditTable {
         const self = this;
         const coordX = self.currentTD.position().left + 16;
         const coordY = self.currentTD.position().top + self.currentTD.outerHeight();
-        const width = self.currentTD.outerWidth() + 2;
         const rowId = self.currentTD[0].dataset.id;
         const propertyCode = self.currentTD.data('code');
         for (let i = 0; i < self.selects.length; i++) {
             if (propertyCode === self.selects[i].dataset.code) {
                 $(self.selects[i]).addClass('show');
-                $(self.selects[i]).css({left: coordX, top: coordY, width: width});
+                $(self.selects[i]).css({left: coordX, top: coordY});
                 self.currentTD.addClass('active');
                 self.setSelected($(self.selects[i]), rowId);
                 break;
@@ -272,7 +300,7 @@ class EditTable {
             }
             self.currentTD = $(this).closest('.td');
             self.saveItem($(this));
-        })
+        });
         self.table.find('.remove').on('click', function (e) {
             if ($(this).hasClass('disabled')) {
                 return;
@@ -291,7 +319,7 @@ class EditTable {
     removeItem(el) {
         const self = this;
         const item = this.parseItemFromRow();
-        Helper.post('/deleteCloth', {_id: item._id}).then(function (response) {
+        Helper.post(`/delete${self.mainClass}`, {_id: item._id}).then(function (response) {
             self.currentTD.closest('.trow').remove();
             for (const i in self.data) {
                 if (self.data[i]['_id'] === item._id) {
@@ -319,7 +347,7 @@ class EditTable {
             }
         }
         el.addClass('disabled loading');
-        Helper.post('/updateCloth', data).then(function (response) {
+        Helper.post(`/update${self.mainClass}`, data).then(function (response) {
             el.removeClass('loading');
         }, function (response) {
             if (response.error) {
@@ -421,7 +449,7 @@ Handlebars.registerHelper('if_not-lookup', function (obj, field, key, opts) {
 function init() {
     $(".ajaxForm").on('submit', function (e) {
         e.preventDefault();
-        const form = $(this)
+        const form = $(this);
 
         const action = form.attr('action') ? $(this).attr('action') : location.href;
         const beforeSendF = form.attr('before-send') ? $(this).attr('before-send') : null;
@@ -506,7 +534,7 @@ function isNumeric(n) {
 
 
 function getVariants(item, exclude) {
-    exclude = exclude ? exclude : ['_id', 'title'];
+    exclude = exclude ? exclude : ['_id', 'title', '__v'];
     if (!item || !item.values) {
         return [];
     }
@@ -514,6 +542,9 @@ function getVariants(item, exclude) {
     const titles = {};
     item.values.forEach(function (values) {
         for (const i in values) {
+            if (values[i] === null) {
+                continue;
+            }
             if (exclude.indexOf(i) !== -1) {
                 continue;
             }
@@ -521,7 +552,10 @@ function getVariants(item, exclude) {
                 result[i] = [];
                 titles[i] = {};
             }
-            if (result[i].indexOf(values[i]) === -1) {
+            const fnd = result[i].find(function (item) {
+                return item._id === values[i]._id
+            });
+            if (!fnd) {
                 if (values['title'] && values['title'][i]) {
                     titles[i][values[i]] = values['title'][i];
                 }
@@ -579,31 +613,94 @@ function getTemplate(tpl) {
     })
 }
 
-function insertAsSelects(container, item, exclude) {
+function insertAsSelects(container, item, exclude, include, cb) {
     const variants = getVariants(item);
     exclude = exclude ? exclude : ['__v', 'title'];
+    include = include ? include : false;
     getTemplate('select').then(function (data) {
         for (const i in variants) {
-            if (exclude.indexOf(i) !== -1) {
+            if ((include && include.indexOf(i) === -1) || (exclude.indexOf(i) !== -1)) {
                 continue;
             }
             const ctx = {};
             ctx.title = LNG.translate(i);
             ctx.multiple = 'multiple';
             ctx.code = i;
-            ctx.values = variants[i].map(function (item) {
-                if (typeof item !== 'object') {
-                    return {_id: item, title: item}
+            ctx.values = [];
+            for (let j = 0; j < variants[i].length; j++) {
+                const variant = variants[i][j];
+                if (variant === null) {
+                    continue;
                 }
-                item.title = item.title ? item.title : item;
-                item._id = item._id ? item._id : item;
-                return item;
-            });
+                if (typeof item !== 'object') {
+                    ctx.values.push({_id: variant, title: variant});
+                }
+                variant.title = variant.title ? variant.title : variant;
+                variant._id = variant._id ? variant._id : variant;
+                ctx.values.push(variant);
+            }
+
+
             container.append(Handlebars.templates["select"](ctx));
+
+        }
+        if (cb) {
+            cb.call(this);
         }
     });
 }
 
+class ActiveFilter {
+    constructor(selects, data) {
+        this.selects = selects;
+        this.data = data;
+        this.initdata = data;
+        this.state = {};
+        this.init();
+    }
+
+    init() {
+        const self = this;
+        this.selects.forEach(($el) => {
+            $el.on('change', function () {
+                if ($(this).val().length === 0) {
+                    delete self.state[$(this).attr('name')];
+                } else {
+                    self.state[$(this).attr('name')] = $(this).val();
+                }
+                self.filterSelects();
+            })
+        });
+
+    }
+
+    filterSelects() {
+        const self = this;
+        let possibleItems = JSON.parse(JSON.stringify(self.data));
+        for (const key in this.state) {
+            const val = this.state[key];
+            self.data.forEach(function (item, index) {
+                if (!item || !item[key] || val.indexOf(item[key]['_id']) === -1) {
+                    possibleItems[index]['disabled'] = true;
+                }
+            });
+        }
+        possibleItems = possibleItems.filter(function (item) {
+            return !item['disabled'];
+        });
+        const variants = getVariants({values: possibleItems});
+        this.selects.forEach(function ($el) {
+            const name = $el.attr('name');
+
+            $el.find('option').prop('disabled', true);
+            if (variants[name] && variants[name].length) {
+                variants[name].forEach(function (item) {
+                    $el.find(`option[value="${item._id}"]`).prop('disabled', false);
+                })
+            }
+        })
+    }
+}
 
 $(function () {
     init();

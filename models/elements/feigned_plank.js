@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const feignedPlankSchema = new Schema({
-    title: String,
+    title: {type: String, unique:true},
     width: Number,
     height: Number,
     deep: Number,
