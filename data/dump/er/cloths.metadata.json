@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"er.cloths"},{"v":1,"unique":true,"key":{"model":1},"name":"model_1","ns":"er.cloths","background":true}]}
