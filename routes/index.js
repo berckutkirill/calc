@@ -84,8 +84,26 @@ router.get('/updateCloth', function (req, res) {
     Promise.all(promises).then(function (data) {
         res.render('updateCloth', {title: 'Express', 'data': {all:data[0], items:data[1]}});
     })
-
 });
+
+
+router.get('/setClothPrice', function (req, res) {
+    const needs = ['furnish', 'color', 'cloth', 'cloth_type', 'dop'];
+
+    Helper.getAll(needs, {'cloth': [['model', 'title'], ['glass', 'title'], ['lacobel', 'title']]}).then(function (data) {
+        res.render('setClothPrice', {title: 'Express', 'data': data});
+    });
+});
+
+router.post('/setClothPrice', function (req, res) {
+    mongoose.model('ClothPrice').create(req.body, function (error) {
+        if (error && error.code !== 11000) {
+            throw new Error(error.message)
+        }
+    });
+    res.json(req.body);
+});
+
 router.get('/addCloth', function (req, res) {
     mongoose.model('Cloth').getAllComponents().then(function (data) {
         res.render('addCloths', {title: 'Express', 'data': data});
@@ -100,7 +118,12 @@ router.post('/addCloth', function (req, res) {
         return item;
 
     });
-    const data = Helper.allPossibleCases(arr);
+    let data;
+    if(arr.length > 1) {
+        data = Helper.allPossibleCases(arr);
+    } else {
+        data = arr;
+    }
     for (const i in data) {
         const item = {};
         for (const j in keys) {

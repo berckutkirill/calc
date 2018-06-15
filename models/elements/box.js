@@ -5,9 +5,6 @@ const boxSchema = new Schema({
     title: {type:String, unique:true},
     width: Number,
     height: Number,
-    deep: Number,
-    color: Schema.Types.ObjectId,
-    furnish: Schema.Types.ObjectId
-
+    deep: Number
 });
 mongoose.model('Box', boxSchema);

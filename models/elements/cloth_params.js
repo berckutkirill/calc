@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const fields = {
     title: {type:String, unique:true},
-    width: {type:Number, title:'Ширина', possibleValues:[600, 900]},
-    height: {type:Number, title:'Высота', possibleValues:[2000, 2200]},
-    patina: {type:Boolean, title:'Патина'},
-    reinforced: {type:Boolean, title:'Усиленный'}
+    height:Number,
+    width:Number,
+    patina: Boolean,
+    reinforced: Boolean,
 };
 function getTitle() {
     const patina = this.patina ? `+${fields.patina.title}`: "";

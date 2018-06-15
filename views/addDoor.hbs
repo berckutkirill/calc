@@ -2,49 +2,41 @@
     {{> select data.fields.material}}
     {{> select data.fields.series}}
     {{> select data.fields.model multiple='multiple'}}
-    <div>
-        <h2>Полотно:</h2>
-        <div class="cloth-params">
 
-        </div>
-    </div>
+    {{> select data.fields.cloth}}
     {{> select data.fields.box multiple='multiple'}}
     {{> select data.fields.jamb multiple='multiple'}}
     {{> select data.fields.dock multiple='multiple'}}
-    {{> select data.fields.decorative_element multiple='multiple'}}
-    {{> select data.fields.feigned_plank multiple="multiple"}} <!--  b -->
-    {{> select data.fields.fourth multiple="multiple"}} <!--  b -->
-    {{> select data.fields.threshold multiple="multiple"}} <!-- b -->
-    {{> select data.fields.portal multiple="multiple"}} <!-- b -->
-    {{> select data.fields.cornice_board multiple="multiple"}} <!-- b -->
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 <script>
     const classParams = 'cloth-params';
     const keyParams = 'cloth';
 
-    function createAF() {
-        const linkedElements = [
-            {parent:'material', child:'series'},
-            {parent:'series', child:'model'}
-        ];
-        const nodes = new Nodes(Object.assign(data['fields'], data['nodes']), linkedElements, true);
-        // const activeFilter = new ActiveFilter([$('#model'), $('#color'), $('#furnish'), $('#glass'), $('#dop')], data['fields'][keyParams]['values']);
-        //
-        // nodes.onChange("model", function () {
-        //     const possibleModels = [];
-        //     $('#model').find('option:not("[disabled]")').each(function () {
-        //         possibleModels.push($(this).attr('value'));
-        //     });
-        //     activeFilter.state = {};
-        //     activeFilter.data = activeFilter.initdata.filter(function (item) {
-        //         return possibleModels.indexOf(item['model']._id) !== -1;
-        //     });
-        //     activeFilter.filterSelects();
-        // });
-        nodes.initRelations();
-    }
-    insertAsSelects($(`.${classParams}`), data['fields'][keyParams], ['__v', 'title'], ['color', 'furnish', 'glass', 'dop'], createAF);
+    const linkedElements = [
+        {parent:'material', child:'series'},
+        {parent:'series', child:'model'}
+    ];
+    const nodes = new Nodes(Object.assign(data['fields'], data['nodes']), linkedElements, true);
+    // const activeFilter = new ActiveFilter([$('#model'), $('#color'), $('#furnish'), $('#glass'), $('#dop')], data['fields'][keyParams]['values']);
+    //
+    $('#model').on("change", function () {
+        const val = $(this).val();
+        $('#cloth').val(null);
+        data.fields.cloth.values.map(function (item) {
+            const finded = item.model.find(function (model) {
+                return val.indexOf(model._id) !== -1;
+            });
+            if (!finded) {
+                $(`#cloth option[value='${item._id}']`).prop('disabled', true);
+            } else {
+                $(`#cloth option[value='${item._id}']`).prop('disabled', false);
+
+            }
+        });
+    });
+    nodes.initRelations();
+    // insertAsSelects($(`.${classParams}`), data['fields'][keyParams], ['__v', 'title'], ['color', 'furnish'], createAF);
     var subsect = new Subsect(data['fields'], classParams, keyParams, [$('#model')]);
 </script>
 

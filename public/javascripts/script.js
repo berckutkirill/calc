@@ -446,6 +446,13 @@ Handlebars.registerHelper('if_not-lookup', function (obj, field, key, opts) {
 
 });
 
+Handlebars.registerHelper('if_eq', function (field1, field2, opts) {
+    if (field1 === field2) {
+        return opts.fn(this);
+    }
+    return opts.inverse(this);
+});
+
 function init() {
     $(".ajaxForm").on('submit', function (e) {
         e.preventDefault();

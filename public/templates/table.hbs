@@ -9,12 +9,21 @@
     {{#each items as |value key|}}
     <tr data-id="{{value._id}}" class="trow">
         {{#each ../columns as |cvalue ckey|}}
+
+        {{#if_eq cvalue.type 'Number'}}
+        <td data-code="{{cvalue.code}}" data-id="{{../lookup value cvalue.code '_id'}}" class="c-pointer td">
+                <input type="text" value="{{../lookup value cvalue.code 'price'}}">
+        </td>
+        {{else}}
         <td data-code="{{cvalue.code}}" data-id="{{../lookup value cvalue.code '_id'}}" class="c-pointer td">
             <div class="row">
                 <div class="col-8 text-left"><span class="text">{{../lookup value cvalue.code 'title'}}</span></div>
                 <div class="col-4 text-right"><span class="clear oi oi-delete {{#if_not-lookup value cvalue.code 'title'}}hidden{{/if_not-lookup}}"></span></div>
             </div>
         </td>
+        {{/if_eq}}
+
+
         {{/each}}
         <td class="controls td">
             <span class="save disabled oi oi-file c-pointer"></span>

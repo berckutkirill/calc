@@ -123,7 +123,7 @@ module.exports = {
     getDiff: function (first, second) {
 
     },
-    getAll: function (codes) {
+    getAll: function (codes, populate) {
         const promises = [];
         const data = {};
         let needs;
@@ -139,6 +139,17 @@ module.exports = {
             needs.map(function (item) {
                 const Model = mongoose.model(item.schema);
                 promises.push(new Promise(function (resolve, reject) {
+                    if(populate[item.code]) {
+                        Model.find({}).populate(populate[item.code]).exec(function (err, res) {
+                            if (err) {
+                                return reject(err);
+                            }
+                            data[item.code] = {title: item.title, code: item.code, values: res};
+                            resolve();
+                        });
+                    } else {
+
+                    }
                     Model.find({}).exec(function (err, res) {
                         if (err) {
                             return reject(err);
