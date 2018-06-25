@@ -4,11 +4,21 @@
             <label for="{{prefix}}{{code}}">{{title}}</label>
         </div>
         <div class="col-6">
-            <select id="{{prefix}}{{code}}" name="{{code}}" class="form-control" {{multiple}}>
-                {{# values}}
-                <option value="{{_id}}">{{title}}</option>
-                {{/values}}
-            </select>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend js-clear-next-select">
+                    <button class="btn btn-outline-secondary  gray-border" type="button"><i class="oi oi-x"></i></button>
+                </div>
+                <select id="{{prefix}}{{code}}" name="{{code}}" class="form-control" {{multiple}}>
+                    <option value=""></option>
+                    {{#values}}
+                    <option value="{{_id}}">{{title}}</option>
+                    {{/values}}
+                </select>
+            </div>
+
+
+
         </div>
     </div>
 </div>

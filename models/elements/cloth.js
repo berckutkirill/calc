@@ -3,11 +3,12 @@ const Helper = require("../Helper");
 const Schema = mongoose.Schema;
 
 const fields = {
-    model: {type: Schema.Types.ObjectId, ref: 'Model', title: "Модель", unique: true},
+    model: {type: Schema.Types.ObjectId, ref: 'Model', title: "Модель"},
     glass: {type: Schema.Types.ObjectId, ref: 'Glass', title: "Стекло"},
     lacobel: {type: Schema.Types.ObjectId, ref: 'Lacobel', title: "Лакобель"}
 };
 const clothSchema = new Schema(fields);
+clothSchema.index({ model: 1, glass: 1, lacobel: 1}, { unique: true });
 clothSchema.set('toObject', { virtuals: true });
 clothSchema.set('toJSON', { virtuals: true });
 clothSchema
@@ -18,7 +19,6 @@ clothSchema
         for(const key of titles) {
             if(this[key]) {
                 titleStr += ` ${this[key]['title']}`;
-
             }
         }
         return titleStr.trim();

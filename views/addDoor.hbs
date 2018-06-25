@@ -1,43 +1,51 @@
-<form class="ajaxForm" before-send="subsect.processParams" after-send="subsect.repairParams" action="/addDoor">
-    {{> select data.fields.material}}
-    {{> select data.fields.series}}
-    {{> select data.fields.model multiple='multiple'}}
+<form class="ajaxForm"  action="/addDoor">
+    {{> select data.material}}
+    {{> select data.series}}
+    {{> select data.model }}
 
-    {{> select data.fields.cloth}}
-    {{> select data.fields.box multiple='multiple'}}
-    {{> select data.fields.jamb multiple='multiple'}}
-    {{> select data.fields.dock multiple='multiple'}}
+    {{> select data.cloth}}
+    {{> select data.color multiple='multiple'}}
+    {{> select data.furnish multiple='multiple'}}
+    {{> select data.box multiple='multiple'}}
+    {{> select data.jamb multiple='multiple'}}
+    {{> select data.dock multiple='multiple'}}
+    {{> select data.lacobel multiple='multiple'}}
+    {{> select data.dop multiple='multiple'}}
+    {{> select data.cloth_type multiple='multiple'}}
+    {{> select data.decorative_element multiple='multiple'}}
+    {{> checkbox data.portal }}
+    {{> checkbox data.cornice_board }}
+    {{> checkbox data.feigned_plank  }}
+
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 <script>
-    const classParams = 'cloth-params';
-    const keyParams = 'cloth';
-
     const linkedElements = [
         {parent:'material', child:'series'},
         {parent:'series', child:'model'}
     ];
-    const nodes = new Nodes(Object.assign(data['fields'], data['nodes']), linkedElements, true);
-    // const activeFilter = new ActiveFilter([$('#model'), $('#color'), $('#furnish'), $('#glass'), $('#dop')], data['fields'][keyParams]['values']);
-    //
+    const nodes = new Nodes(data, linkedElements, true);
     $('#model').on("change", function () {
         const val = $(this).val();
-        $('#cloth').val(null);
-        data.fields.cloth.values.map(function (item) {
-            const finded = item.model.find(function (model) {
-                return val.indexOf(model._id) !== -1;
-            });
+        let tonull = false;
+        const valCloth = $('#cloth').val();
+        data.cloth.values.map(function (item) {
+            const finded = item.model._id === val;
             if (!finded) {
+                if(!tonull && valCloth === item._id) {
+                    tonull = true;
+                }
                 $(`#cloth option[value='${item._id}']`).prop('disabled', true);
             } else {
                 $(`#cloth option[value='${item._id}']`).prop('disabled', false);
 
             }
         });
+        if(tonull) {
+            $('#cloth').val(null).change();
+        }
     });
     nodes.initRelations();
-    // insertAsSelects($(`.${classParams}`), data['fields'][keyParams], ['__v', 'title'], ['color', 'furnish'], createAF);
-    var subsect = new Subsect(data['fields'], classParams, keyParams, [$('#model')]);
 </script>
 
 

@@ -2,6 +2,15 @@ const mongoose = require("mongoose");
 const fs = require("fs");
 module.exports = {
     AllModels: JSON.parse(fs.readFileSync(__dirname + '/../public/data/allModels.json', 'utf8')),
+    getTitle: function (code) {
+        const f = this.AllModels.find(function (item) {
+            return item.code === code;
+        });
+        if(f) {
+            return f.title;
+        }
+        return code;
+    },
     capitalize: function (str) {
         if (!str) {
             return '';
@@ -120,10 +129,9 @@ module.exports = {
             });
         })
     },
-    getDiff: function (first, second) {
 
-    },
     getAll: function (codes, populate) {
+        populate = populate ? populate : {};
         const promises = [];
         const data = {};
         let needs;

@@ -15,6 +15,24 @@ const fields = {
     price: Number
 };
 const clothPriceSchema = new Schema(fields);
+clothPriceSchema.statics.getFromRequest = function (body) {
+    const cloth_price_fields = ['cloth', 'color', 'furnish', 'type', 'dop'];
+    const q = {};
+    return new Promise(function (resolve, reject) {
+        cloth_price_fields.forEach(function (code) {
+            if(typeof body[code] !== 'undefined') {
+                q[code] = body[code];
+            }
+        });
+        mongoose.model('ClothPrice').find(q, function (err, items) {
+           if(err) {
+               return reject(err);
+           }
+            return resolve(items);
+        })
+    })
+
+}
 clothPriceSchema.methods.calculatePrice = function (params, config) {
     const self = this;
     let price = self.price;

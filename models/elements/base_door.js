@@ -4,25 +4,35 @@ var mongoosePaginate = require('mongoose-paginate');
 const Helper = require("../Helper");
 const Schema = mongoose.Schema;
 const fields = {
+    title: String,
     material: {type: Schema.Types.ObjectId, ref: 'Material', title: "Материал"},
     series: {type: Schema.Types.ObjectId, ref: 'Series', title: "Серия"},
     model: {type: Schema.Types.ObjectId, ref: 'Model', title: "Модель"},
     cloth: {type: Schema.Types.ObjectId, ref: 'Cloth', title: "Полотно"},
-    box: {type: Schema.Types.ObjectId, ref: 'Box', title: "Коробка"},
-    jamb: {type: Schema.Types.ObjectId, ref: 'Jamb', title: "Наличник"},
-    dock: {type: Schema.Types.ObjectId, ref: 'Dock', title: "Доборы"},
-
+    cloth_type: {type: Schema.Types.ObjectId, ref: 'ClothType'},
+    dop: {type: Schema.Types.ObjectId, ref: 'Dop'},
+    color: [{type: Schema.Types.ObjectId, ref: 'Color', title: "Цвет"}],
+    box: [{type: Schema.Types.ObjectId, ref: 'Box', title: "Коробка"}],
+    furnish: [{type: Schema.Types.ObjectId, ref: 'Furnish', title: "Отделка"}],
+    jamb: [{type: Schema.Types.ObjectId, ref: 'Jamb', title: "Наличник"}],
+    dock: [{type: Schema.Types.ObjectId, ref: 'Dock', title: "Доборы"}],
+    lacobel: [{type: Schema.Types.ObjectId, ref: 'Lacobel', title: "Лакобель"}],
+    decorative_element: {type: Schema.Types.ObjectId, title: "Декоративные элементы"},
+    portal: {type: Boolean, title: "Портал"},
+    cornice_board: {type: Boolean, title: "Карнизная доска"},
+    feigned_plank: {type: Boolean, title: "Притворная планка"}
 };
 const baseDoorSchema = new Schema(fields);
 baseDoorSchema.plugin(mongoosePaginate);
 
 baseDoorSchema.statics.getComponents = function () {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
         const deep = {'cloth': {'populate': function (model, cb) {
                     return model.find({})
                         .populate({ path: 'model', select: 'title' })
                         .populate({ path: 'color', select: 'title' })
                         .populate({ path: 'furnish', select: 'title' })
+                        .populate({ path: 'lacobel', select: 'title' })
                         .populate('glass')
                         .populate({ path: 'dop', select: 'title' })
                         .exec(function (err, res) {

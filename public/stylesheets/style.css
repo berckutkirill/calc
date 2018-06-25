@@ -9,7 +9,9 @@ a {
 select[multiple] {
   height: 300px;
 }
-
+option:disabled {
+  display: none;
+}
 .custom-control-input:checked+label {
   background: #0275d8;
   color: #fff;
@@ -35,4 +37,13 @@ select[multiple] {
   background: rgba(0,0,0,.4);
   padding: 5px 10px;
   border-radius: 5px;
+}
+
+.gray-border {
+  border: 1px solid #ced4da;
+  color: #808182;
+}
+
+select.form-control:not([size]):not([multiple]) {
+  flex-direction: row;
 }

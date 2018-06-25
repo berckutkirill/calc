@@ -232,7 +232,6 @@
     {"satin":true, "width": 6, "stained":true, "facet": 3}
   ],
   "feigned_plank":[{"title":"да"}],
-  "fourth":[{"title":"да"}],
   "cloth_params":[
     {"width": 600, "height":2000, "patina": false, "reinforced": false},
     {"width": 600, "height":2000, "patina": true, "reinforced": false},
@@ -250,6 +249,21 @@
     {"width": 900, "height":2200, "patina": true, "reinforced": false},
     {"width": 900, "height":2200, "patina": false, "reinforced": true},
     {"width": 900, "height":2200, "patina": true, "reinforced": true}
+  ],
+  "size": [
+    {"width": 75, "height": 2090, "depth":42},
+    {"width": 75, "height": 2400, "depth":42},
+    {"width": 89, "height": 2090, "depth":37},
+    {"width": 89, "height": 2400, "depth":37},
+    {"width": 70, "height": 2170, "depth":14},
+    {"width": 70, "height": 2400, "depth":14},
+    {"width": 70, "height": 2170, "depth":13.8},
+    {"width": 70, "height": 2400, "depth":13.8},
+    {"width": 80, "height": 2170, "depth":13.8},
+    {"width": 80, "height": 2400, "depth":13.8},
+    {"width": 80, "height": 2400, "depth":12},
+    {"width": 80, "height": 2000, "depth":12},
+    {"height": 2300}
   ],
   "box": [
     {"title":"БК-01* Брус коробочный, фанерованный  строганным шпоном дуба, с уплотнителем, (основа – сращенный брус хвойных пород)"},

@@ -101,7 +101,8 @@ class Nodes {
         this.onChangeCb[name]= func;
     };
     filterChilds(prefix, parent, child, _id, values) {
-        const selectedValue = $(`#${prefix}${child}`).val();
+        const el_child = $(`#${prefix}${child}`);
+        const selectedValue = el_child.val();
         $(`#${prefix}${child} option`).prop('disabled', true);
 
         let clearSelected = true;
@@ -113,8 +114,9 @@ class Nodes {
                 $(`#${prefix}${child} option[value="${item[child]}"]`).prop('disabled', false);
             }
         });
-        if (clearSelected) {
-            $(`#${prefix}${child}`).val(null);
+        if (clearSelected && selectedValue !== null) {
+            el_child.val(null).change();
+
         }
         this.runChange(`${prefix}${child}`);
     }
@@ -476,7 +478,11 @@ function init() {
     });
     Promise.all(promises).then(function () {
         loader.run();
-    })
+    });
+    $(".js-clear-next-select").on('click', function (e) {
+        e.preventDefault();
+        $(this).next('select').val(null).change();
+    });
 }
 
 function executeFunctionByName(functionName, context /*, args */) {

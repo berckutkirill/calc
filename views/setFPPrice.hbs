@@ -1,0 +1,26 @@
+<form class="ajaxForm" method="post" action="/setFPPrice">
+    {{> select data.series multiple='multiple'}}
+    {{> select data.color multiple='multiple'}}
+    {{> select data.furnish multiple='multiple'}}
+    {{> select data.size multiple='multiple'}}
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-6">
+                <label for="price">Цена</label>
+            </div>
+            <div class="col-6">
+                <input name="price" id="price"  class="form-control" />
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+    // const classParams = 'params';
+    // const keyParams = 'cloth_params';
+    //
+    // insertAsSelects($(`.${classParams}`), data[keyParams]);
+    // var subsect = new Subsect(data, classParams, keyParams);
+</script>
