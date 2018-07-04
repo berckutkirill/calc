@@ -16,6 +16,9 @@ configSchema.statics.getConfig = function () {
             if(err) {
                 return reject(err);
             }
+            if(!config) {
+                config = {};
+            }
             return resolve(config);
         })
     })

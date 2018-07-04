@@ -1,0 +1,30 @@
+{{#if data.error}}
+{{> error data.error}}
+{{/if}}
+<div class="table-block">
+
+</div>
+<div class="custom-r_select-block"></div>
+<script>
+    loader.onLoad(function () {
+        const promises = [];
+        promises.push(getPartial('dropdownMenu'), getTemplate('table'));
+        Promise.all(promises).then(function (result) {
+            for (const i in data.all) {
+                $(".custom-r_select-block").append(result[0](Object.assign(data.all[i], {prefix:'f_'})));
+            }
+
+            $(".table-block").append(result[1]({
+                items: data.items,
+                columns: [
+                    {title: LNG.translate("title"), code: 'title'},
+                    {title: LNG.translate("material"), code: 'material'},
+                    {title: LNG.translate("model"), code: 'model'},
+                    {title: LNG.translate("series"), code: 'series'}
+                ]
+            }));
+            const editTable = new EditTable($(".table-block table"), $('.dropdown-menu'), data.items, 'Decor');
+            $(".table-block table").DataTable();
+        })
+    }, this)
+</script>

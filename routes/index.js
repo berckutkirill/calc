@@ -11,4 +11,5 @@ require('./cloth')(router);
 require('./doors')(router);
 require('./nodes')(router);
 require('./prices')(router);
+require('./decor_element')(router);
 module.exports = router;

@@ -3,10 +3,30 @@ const Helper = require('../models/Helper');
 module.exports = function (router) {
 
     router.post('/getPrice', function (req, res) {
-        mongoose.model('ClothPrice').getFromRequest(req.body).then(function (price) {
-            return res.json(price);
-        }, function (error) {
-            return res.json(error);
+        const promises = [];
+        promises.push(new Promise(function(resolve, reject) {
+            mongoose.model('BoxPrice').getFromRequest(req.body).then(function (boxes) {
+                let box;
+                if(boxes.length === 1) {
+                    box = boxes[0];
+                }
+                mongoose.model('DockPrice').getFromRequest(box, req.body).then(function (docks) {
+                    resolve([boxes, docks])
+                }, function (err) {
+                    reject(err);
+                })
+            }, function (err) {
+                reject(err);
+            });
+
+        }));
+        promises.push(mongoose.model('DecorativeElementPrice').getFromRequest(req.body));
+        promises.push(mongoose.model('JambPrice').getFromRequest(req.body));
+        promises.push(mongoose.model('ClothPrice').getFromRequest(req.body));
+        Promise.all(promises).then(function (data) {
+            return res.json(data);
+        }, function (data) {
+            return res.json(data);
         });
     });
     router.get('/setClothPrice', function (req, res) {

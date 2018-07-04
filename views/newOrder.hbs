@@ -19,6 +19,7 @@
             </div>
         </div>
     </div>
+
     <input type="hidden" name="cloth" id="cloth"/>
     {{> select data.material }}
     {{> select data.series }}
@@ -29,21 +30,96 @@
     {{> select data.furnish }}
     {{> select data.cloth_type }}
     {{> select data.dop }}
-    {{> select data.box }}
-    {{> select data.dock }}
-    {{> select data.jamb }}
-
     {{> checkbox data.reinforced }}
     {{> checkbox data.patina }}
+
+
+
+    {{> select data.box }}
+    <div class="form-group">
+        <div class="row">
+            <div class="col-6">
+                <label for="wall_width">Ширина Стены</label>
+            </div>
+            <div class="col-6">
+                <input name="wall_width" id="wall_width" value="80" class="form-control"/>
+            </div>
+        </div>
+    </div>
+    {{> select data.dock }}
+    <div class="form-group">
+        <div class="row">
+            <div class="col-6">
+                <label for="dock_quantity">Количество доборов</label>
+            </div>
+            <div class="col-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend js-clear-next-select">
+                        <button class="btn btn-outline-secondary  gray-border" type="button"><i class="oi oi-x"></i>
+                        </button>
+                    </div>
+                    <select name="dock_quantity" id="dock_quantity" class="form-control">
+                        <option value="2.5">2.5</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{> select data.jamb }}
+    {{> select data.decorative_element }}
+    <div class="form-group">
+        <div class="row">
+            <div class="col-6">
+                <label for="decorative_element[width]">Декоративные элементы (ширина)</label>
+            </div>
+            <div class="col-6">
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend js-clear-next-select">
+                        <button class="btn btn-outline-secondary  gray-border" type="button"><i class="oi oi-x"></i>
+                        </button>
+                    </div>
+                    <select id="decorative_element[width]" name="decorative_element[width]" class="form-control">
+                        <option value=""></option>
+                        <option value="70">70</option>
+                        <option value="80">80</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-6">
+                <label for="decorative_element[pora]">Декоративные элементы (пора)</label>
+            </div>
+            <div class="col-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend js-clear-next-select">
+                        <button class="btn btn-outline-secondary  gray-border" type="button">
+                            <i class="oi oi-x"></i>
+                        </button>
+                    </div>
+                    <select id="decorative_element[pora]" name="decorative_element[pora]" class="form-control">
+                        <option value=""></option>
+                        <option value="0">закрытая</option>
+                        <option value="1">открытая</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{> checkbox data.threshold }}
     {{> checkbox data.portal }}
     {{> checkbox data.cornice_board }}
     {{> checkbox data.feigned_plank }}
     <div class="form-group">
         <div class="row">
-
             <div class="col-6">
                 <button type="button" disabled class="btn btn-primary js-get-price">Get Price</button>
-
             </div>
         </div>
     </div>
@@ -51,9 +127,13 @@
 </form>
 
 <script>
+
+    const decorChangers = ['material'];
+    const clothChangers = ['glass', 'lacobel'];
+
     const params = ['cloth', 'box', 'dock', 'jamb', 'lacobel', 'glass', 'color', 'furnish', 'cloth_type', 'dop'];
     const except = ['_id', '__v'];
-    const clothChangers = ['glass', 'lacobel'];
+    const changers = ['model', 'box', 'dock', 'jamb', 'color', 'furnish', 'glass', 'lacobel', 'cloth_type', 'dop', 'material'];
     const baseDoorChangers = ['model', 'box', 'dock', 'jamb', 'color', 'furnish', 'glass', 'lacobel', 'cloth_type', 'dop'];
     $(".js-get-price").on('click', function () {
         $.ajax({
@@ -64,133 +144,167 @@
             console.log(data)
         })
     });
-    for (const i in baseDoorChangers) {
-        $(`#${baseDoorChangers[i]}`).on('change', function () {
-            const data = {};
-            for (const j in baseDoorChangers) {
-                if(!$(`#${baseDoorChangers[j]}`).val()) {
-                    continue;
-                }
-                if(clothChangers.indexOf(baseDoorChangers[j]) !== -1) {
-                    if(!data['cloth']) {
-                        data['cloth'] = {};
-                    }
-                    data['cloth'][baseDoorChangers[j]] = $(`#${baseDoorChangers[j]}`).val();
-                    continue;
-                }
-                if ($(`#${baseDoorChangers[j]}`).val().length) {
-                    data[baseDoorChangers[j]] = $(`#${baseDoorChangers[j]}`).val();
-                }
-            }
 
-            $.ajax({
-                url: '/getBaseDoors',
-                data: JSON.stringify(data),
-                dataType: 'json',
-                type: 'post',
-                contentType: 'application/json',
-            }).done(function (doors) {
-                if (!doors || !doors.length) {
-                    $.notify("Нет базовых дверей с такими характеристиками");
-                    $("button[type='submit']").prop('disabled', true);
-                    $(".js-get-price").prop('disabled', true);
-                    $("#cloth").val(null);
+    function baseDoorChange() {
+        const data = {};
+        for (const j in baseDoorChangers) {
+            if (!$(`#${baseDoorChangers[j]}`).val()) {
+                continue;
+            }
+            if (clothChangers.indexOf(baseDoorChangers[j]) !== -1) {
+                if (!data['cloth']) {
+                    data['cloth'] = {};
+                }
+                data['cloth'][baseDoorChangers[j]] = $(`#${baseDoorChangers[j]}`).val();
+                continue;
+            }
+            if ($(`#${baseDoorChangers[j]}`).val().length) {
+                data[baseDoorChangers[j]] = $(`#${baseDoorChangers[j]}`).val();
+            }
+        }
+
+        $.ajax({
+            url: '/getBaseDoors',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            type: 'post',
+            contentType: 'application/json',
+        }).done(function (doors) {
+            if (!doors || !doors.length) {
+                $.notify("Нет базовых дверей с такими характеристиками");
+                $("button[type='submit']").prop('disabled', true);
+                $(".js-get-price").prop('disabled', true);
+                $("#cloth").val(null);
+                return;
+            }
+            if (doors.length === 1) {
+                let disabled = false;
+                const requiredForPrice = [];
+                for (const d in doors[0]) {
+                    if (except.indexOf(d) !== -1) {
+                        continue;
+                    }
+                    if (!!doors[0][d]) {
+                        if ((Array.isArray(doors[0][d]) || typeof doors[0][d] === 'string') && doors[0][d].length)
+                            requiredForPrice.push(d);
+                    } else if (typeof doors[0][d] === 'object') {
+                        requiredForPrice.push(d);
+                    }
+                }
+                for (const k in requiredForPrice) {
+                    if (!document.getElementById(requiredForPrice[k]).value) {
+                        disabled = true;
+                        break;
+                    }
+                }
+                $(".js-get-price").prop('disabled', disabled);
+                $("#cloth").val(doors[0]['cloth']['_id']);
+            } else {
+                $("#cloth").val(null);
+                $(".js-get-price").prop('disabled', true);
+
+            }
+            $("button[type='submit']").prop('disabled', false);
+            const props = {};
+            doors.forEach(function (door) {
+                for (const i in door) {
+                    if (!props[i]) {
+                        props[i] = [];
+                    }
+                    if (Array.isArray(door[i])) {
+                        door[i].forEach(function (param) {
+                            if (props[i].indexOf(param) === -1) {
+                                props[i].push(param);
+                            }
+                        })
+                    } else {
+                        if (props[i].indexOf(door[i]) === -1) {
+                            props[i].push(door[i]);
+                        }
+                    }
+
+                }
+            });
+            let posVals = {};
+            params.forEach(function (param) {
+                $(`#${param} option`).prop('disabled', true);
+                if (!props[param]) {
                     return;
                 }
-                if( doors.length === 1) {
-                    let disabled = false;
-                    const requiredForPrice = [];
-                    for(const d in doors[0]) {
-                        if(except.indexOf(d) !== -1) {
-                            continue;
-                        }
-                        if(!!doors[0][d]) {
-                            if((Array.isArray(doors[0][d]) || typeof doors[0][d] ==='string') && doors[0][d].length)
-                            requiredForPrice.push(d);
-                        } else if(typeof doors[0][d] === 'object') {
-                            requiredForPrice.push(d);
-                        }
-                    }
-                    for(const k in requiredForPrice) {
-                        if(!document.getElementById(requiredForPrice[k]).value) {
-                            disabled = true;
-                            break;
-                        }
-                    }
-                    $(".js-get-price").prop('disabled', disabled);
-                    $("#cloth").val(doors[0]['cloth']['_id']);
-                } else {
-                    $("#cloth").val(null);
-                    $(".js-get-price").prop('disabled',true);
-
-                }
-                $("button[type='submit']").prop('disabled', false);
-                const props = {};
-                doors.forEach(function (door) {
-                    for (const i in door) {
-                        if (!props[i]) {
-                            props[i] = [];
-                        }
-                        if (Array.isArray(door[i])) {
-                            door[i].forEach(function (param) {
-                                if (props[i].indexOf(param) === -1) {
-                                    props[i].push(param);
-                                }
-                            })
-                        } else {
-                            if (props[i].indexOf(door[i]) === -1) {
-                                props[i].push(door[i]);
-                            }
-                        }
-
-                    }
-                });
-                let posVals = {};
-                params.forEach(function (param) {
-                    $(`#${param} option`).prop('disabled', true);
-                    if (!props[param]) {
-                        return;
-                    }
-                    props[param].forEach(function (val) {
-                        if (typeof val === 'object') {
-                            if (!posVals[param]) {
-                                posVals[param] = [];
-                            }
-                            posVals[param].push(val['_id']);
-
-                            for (const j in val) {
-                                if (!posVals[j]) {
-                                    posVals[j] = [];
-                                }
-                                posVals[j].push(val[j]);
-                            }
-                            return;
-                        }
+                props[param].forEach(function (val) {
+                    if (typeof val === 'object') {
                         if (!posVals[param]) {
                             posVals[param] = [];
                         }
-                        posVals[param].push(val);
-                    });
-                });
+                        posVals[param].push(val['_id']);
 
-                for (const k in params) {
-                    const i = params[k];
-                    const el = document.getElementById(i);
-                    if(!el) {
-                        continue;
+                        for (const j in val) {
+                            if (!posVals[j]) {
+                                posVals[j] = [];
+                            }
+                            posVals[j].push(val[j]);
+                        }
+                        return;
                     }
-                    const currentVal = el.value;
-                    if (currentVal && (!posVals[i] || posVals[i].indexOf(currentVal) === -1)) {
-                        $(`#${i}`).val(null);
+                    if (!posVals[param]) {
+                        posVals[param] = [];
                     }
-                    if(!posVals[i]) {
-                        continue;
-                    }
-                    posVals[i].forEach(function (va) {
-                        $(`#${i} option[value='${va}']`).prop('disabled', false);
-                    })
-                }
+                    posVals[param].push(val);
+                });
             });
+
+            for (const k in params) {
+                const i = params[k];
+                const el = document.getElementById(i);
+                if (!el) {
+                    continue;
+                }
+                const currentVal = el.value;
+                if (currentVal && (!posVals[i] || posVals[i].indexOf(currentVal) === -1)) {
+                    $(`#${i}`).val(null);
+                }
+                if (!posVals[i]) {
+                    continue;
+                }
+                posVals[i].forEach(function (va) {
+                    $(`#${i} option[value='${va}']`).prop('disabled', false);
+                })
+            }
+        });
+    }
+
+    function decorChange() {
+        const filter = {};
+        $("#decorative_element option").prop('disabled', true);
+        for (const j in decorChangers) {
+            if (!$(`#${decorChangers[j]}`).val()) {
+                continue;
+            }
+
+            if ($(`#${decorChangers[j]}`).val().length) {
+                filter[decorChangers[j]] = $(`#${decorChangers[j]}`).val();
+            }
+        }
+        const filtered = [];
+        data.decorative_element.values.forEach(function (item) {
+            for (const i in filter) {
+                if (item[i] === filter[i]) {
+                    $(`#decorative_element option[value=${item['_id']}]`).prop('disabled', false);
+                    filtered.push(item);
+                }
+            }
+        });
+        console.log(filtered);
+    }
+
+    for (const i in changers) {
+        $(`#${changers[i]}`).on('change', function () {
+            if (baseDoorChangers.indexOf($(this).attr('id')) !== -1) {
+                baseDoorChange();
+            }
+            if (decorChangers.indexOf($(this).attr('id')) !== -1) {
+                decorChange();
+            }
         })
     }
     const linkedElements = [

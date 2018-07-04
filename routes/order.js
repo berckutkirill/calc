@@ -2,13 +2,15 @@ const mongoose = require('mongoose');
 const Helper = require('../models/Helper');
 module.exports = function (router) {
     router.get('/addNewOrder', function (req, res) {
-        const needs = ['material', 'cloth', 'box', 'dock', 'jamb', 'cloth_type', 'dop', 'lacobel','glass', 'color', 'furnish', 'model',
+        const needs = ['material', 'cloth', 'box', 'dock', 'jamb', 'cloth_type', 'dop', 'lacobel','glass',
+            'color', 'furnish', 'model', 'decorative_element',
             'series', 'material', 'material_series', 'series_model'];
         Helper.getAll(needs, {'cloth': [['model', 'title'], ['glass', 'title'], ['lacobel', 'title']]})
             .then(function (data) {
                 data.portal = {code: 'portal', title: Helper.getTitle('portal')};
                 data.cornice_board = {code: 'cornice_board', title: Helper.getTitle('cornice_board')};
                 data.feigned_plank = {code: 'feigned_plank', title: Helper.getTitle('feigned_plank')};
+                data.threshold = {code: 'threshold', title: Helper.getTitle('threshold')};
                 data.reinforced = {code: 'reinforced', title: Helper.getTitle('reinforced')};
                 data.patina = {code: 'patina', title: Helper.getTitle('patina')};
             res.render('newOrder', {title: 'Express', 'data': data});

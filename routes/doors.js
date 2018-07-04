@@ -48,7 +48,8 @@ module.exports = function (router) {
         })
     });
     router.get('/addDoor', function (req, res) {
-        const needs = ['color', 'lacobel','furnish', 'model', 'series', 'material', 'jamb', 'dock', 'cloth', 'box', 'decorative_element', 'material_series', 'series_model'];
+        const needs = ['color', 'lacobel','furnish', 'model', 'series', 'material', 'jamb', 'dock',
+            'cloth', 'box', 'cloth_type', 'dop', 'decorative_element', 'material_series', 'series_model'];
         Helper.getAll(needs, {cloth: [['model', 'title'], 'glass', ['lacobel', 'title']]}).then(function (data) {
             data.portal = {code: 'portal', title: Helper.getTitle('portal')};
             data.cornice_board = {code: 'cornice_board', title: Helper.getTitle('cornice_board')};

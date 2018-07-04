@@ -1,7 +1,7 @@
 [
   {"code": "box", "title": "Коробка", "schema": "Box"},
   {"code": "cloth", "title": "Полотно", "schema": "Cloth"},
-  {"code": "cloth_type", "title": "Покрытие", "schema": "ClothType"},
+  {"code": "cloth_type", "title": "Покрытие (Тип)", "schema": "ClothType"},
   {"code": "color", "title": "Цвет", "schema": "Color"},
   {"code": "cornice_board", "title": "Карнизная доска", "schema": "CorniceBoard"},
   {"code": "decorative_element", "title": "Декоративные элементы", "schema": "DecorativeElement"},
