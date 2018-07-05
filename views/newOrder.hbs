@@ -50,7 +50,7 @@
     <div class="form-group">
         <div class="row">
             <div class="col-6">
-                <label for="dock_quantity">Количество доборов</label>
+                <label for="dock[quantity]">Количество доборов</label>
             </div>
             <div class="col-6">
                 <div class="input-group mb-3">
@@ -58,7 +58,8 @@
                         <button class="btn btn-outline-secondary  gray-border" type="button"><i class="oi oi-x"></i>
                         </button>
                     </div>
-                    <select name="dock_quantity" id="dock_quantity" class="form-control">
+                    <select name="dock[quantity]" id="dock[quantity]" class="form-control">
+                        <option value="1">1</option>
                         <option value="2.5">2.5</option>
                         <option value="3">3</option>
                     </select>
@@ -66,6 +67,7 @@
             </div>
         </div>
     </div>
+
     {{> select data.jamb }}
     {{> select data.decorative_element }}
     <div class="form-group">
@@ -113,7 +115,39 @@
         </div>
     </div>
     {{> checkbox data.threshold }}
+    <div class="form-group">
+        <div class="row">
+            <div class="col-6">
+                <label for="threshold_with_dock">Порог по ширине коробки с добором</label>
+            </div>
+            <div class="col-6">
+                <input type="checkbox" name="threshold_with_dock" class="form-control" id="threshold_with_dock" />
+            </div>
+        </div>
+    </div>
+
+
     {{> checkbox data.portal }}
+    <div class="form-group">
+        <div class="row">
+            <div class="col-6">
+                <label for="portal[quantity]">Порталов</label>
+            </div>
+            <div class="col-6">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend js-clear-next-select">
+                        <button class="btn btn-outline-secondary  gray-border" type="button"><i class="oi oi-x"></i>
+                        </button>
+                    </div>
+                    <select name="portal[quantity]" id="portal[quantity]" class="form-control">
+                        <option value="1">1</option>
+                        <option value="2.5">2.5</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
     {{> checkbox data.cornice_board }}
     {{> checkbox data.feigned_plank }}
     <div class="form-group">

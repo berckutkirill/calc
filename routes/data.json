@@ -162,11 +162,11 @@
     {"title":"Л3D"}
   ],
   "material": [
-    {"title":"экошпон"},
-    {"title":"шпон и пластик"},
-    {"title":"шпон и эмаль"},
-    {"title":"шпон"},
-    {"title":"эмаль"}
+    {"title":"экошпон", "code":"ecoshpon"},
+    {"title":"шпон и пластик", "code":"shpon_plastik"},
+    {"title":"шпон и эмаль", "code":"shpon_emal"},
+    {"title":"шпон", "code":"shpon"},
+    {"title":"эмаль", "code":"emal"}
   ],
   "furnish": [
     {"title":"шпон fine-line"},

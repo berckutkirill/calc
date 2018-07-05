@@ -1,33 +1,50 @@
 const mongoose = require('mongoose');
+const Formules = require('../models/Formules');
 const Helper = require('../models/Helper');
 module.exports = function (router) {
 
     router.post('/getPrice', function (req, res) {
-        const promises = [];
-        promises.push(new Promise(function(resolve, reject) {
-            mongoose.model('BoxPrice').getFromRequest(req.body).then(function (boxes) {
-                let box;
-                if(boxes.length === 1) {
-                    box = boxes[0];
-                }
-                mongoose.model('DockPrice').getFromRequest(box, req.body).then(function (docks) {
-                    resolve([boxes, docks])
+        mongoose.model('Material').findById(req.body.material, function (err, material) {
+            if (err) {
+                return res.json(err);
+            }
+
+            const promises = [];
+            promises.push(new Promise(function (resolve, reject) {
+                mongoose.model('BoxPrice').getFromRequest(req.body).then(function (boxes) {
+                    let box;
+                    if (boxes.length === 1) {
+                        box = boxes[0];
+                    }
+                    mongoose.model('DockPrice').getFromRequest(box, req.body, material).then(function (docks) {
+                        if (req.body['threshold']) {
+                            if (box && docks && docks[0]) {
+                                Formules.getThresholdPrice(box, docks[0], !!req.body['threshold_with_dock']).then(function (price) {
+                                    console.log(price);
+                                })
+                            }
+
+                        }
+                        resolve([boxes, docks])
+                    }, function (err) {
+                        reject(err);
+                    })
                 }, function (err) {
                     reject(err);
-                })
-            }, function (err) {
-                reject(err);
-            });
+                });
 
-        }));
-        promises.push(mongoose.model('DecorativeElementPrice').getFromRequest(req.body));
-        promises.push(mongoose.model('JambPrice').getFromRequest(req.body));
-        promises.push(mongoose.model('ClothPrice').getFromRequest(req.body));
-        Promise.all(promises).then(function (data) {
-            return res.json(data);
-        }, function (data) {
-            return res.json(data);
+            }));
+            promises.push(mongoose.model('DecorativeElementPrice').getFromRequest(req.body));
+            promises.push(mongoose.model('JambPrice').getFromRequest(req.body));
+            promises.push(mongoose.model('ClothPrice').getFromRequest(req.body));
+            promises.push(Formules.getPortalPrice(req.body, material));
+            Promise.all(promises).then(function (data) {
+                return res.json(data);
+            }, function (data) {
+                return res.json(data);
+            });
         });
+
     });
     router.get('/setClothPrice', function (req, res) {
         const needs = ['furnish', 'color', 'cloth', 'cloth_type', 'dop'];
@@ -127,8 +144,6 @@ module.exports = function (router) {
         });
         res.json(req.body);
     });
-
-
 
 
 };
