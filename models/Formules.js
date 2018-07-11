@@ -9,15 +9,29 @@ module.exports = {
             }
         })
     },
+    getCornicePrice: function (body, box, material) {
+        const q = 1;
+        let bw = body['board_width'] ? body['board_width'] : .1;
+        return new Promise(function (resolve) {
+            if(material.code === 'shpon' || material.code === 'ecoshpon') {
+                resolve(bw * (body['height'] / 1000) * q * box.price * 1.5);
+            } else if(material.code === 'emal' || material.code === 'shpon_emal') {
+                const price =  bw * (body['height']/1000) * q * box.price * 1.5;
+                resolve(price * 1.5);
+            } else if(material.code === 'shpon_plastik') {
+                resolve( box.price * q * 1.5);
+            } else {
+                resolve(0);
+            }
+        });
+    },
+
     getPortalPrice: function (body, material) {
         return new Promise(function (resolve, reject) {
             const ww = body['wall_width'];
             const h = body['height'];
-            const q = body['portal[quantity]'];
-
-
-
-            if(material.title === 'shpon' || material.title === 'ecoshpon' || material.title === 'shpon_plastik') {
+            const quantity = body['portal[quantity]'];
+            if(material.code === 'shpon' || material.code === 'ecoshpon' || material.code === 'shpon_plastik') {
                 const q = {for_calc:true};
 
                 const need = ['series', 'material', 'furnish', 'color'];
@@ -28,13 +42,16 @@ module.exports = {
                 });
 
                 mongoose.model('DockPrice').findOne(q, function (err, price) {
-                    if(err || !price) {
+                    if(err ) {
                         return reject(err)
                     }
-                    resolve(ww/1000*h/1000*q*price.price);
+                    if(!price) {
+                        return resolve(0);
+                    }
+                    resolve(ww/1000*h/1000*quantity*price.price);
                 });
-            } else if(material.title === 'shpon_emal' || material.title === 'emal') {
-                let price = ww/1000*h/10*q*2;
+            } else if(material.code === 'shpon_emal' || material.code === 'emal') {
+                let price = ww/1000*h/10*quantity*2;
                 resolve(price * 1.4 );
             }
 

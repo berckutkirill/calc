@@ -12,21 +12,30 @@ module.exports = function (router) {
             const promises = [];
             promises.push(new Promise(function (resolve, reject) {
                 mongoose.model('BoxPrice').getFromRequest(req.body).then(function (boxes) {
+                    const inpromises = [];
                     let box;
-                    if (boxes.length === 1) {
+                    if (boxes.length && req.body['cornice_board']) {
                         box = boxes[0];
+                        inpromises.push(Formules.getCornicePrice(req.body, box, material));
+                    } else {
+                        inpromises.push(Promise.resolve(0));
                     }
-                    mongoose.model('DockPrice').getFromRequest(box, req.body, material).then(function (docks) {
-                        if (req.body['threshold']) {
-                            if (box && docks && docks[0]) {
+                    inpromises.push(new Promise(function (resolve, reject) {
+                        mongoose.model('DockPrice').getFromRequest(box, req.body, material).then(function (docks) {
+                            if (req.body['threshold'] && box && docks && docks[0]) {
                                 Formules.getThresholdPrice(box, docks[0], !!req.body['threshold_with_dock']).then(function (price) {
-                                    console.log(price);
+                                    resolve({boxes:boxes, docks:docks, threshold:price});
                                 })
+                            } else {
+                                resolve({boxes:boxes, docks:docks, threshold:0})
                             }
-
-                        }
-                        resolve([boxes, docks])
-                    }, function (err) {
+                        }, function (err) {
+                            reject(err);
+                        })
+                    }));
+                    Promise.all(inpromises).then(function (data) {
+                        resolve({cornice:data[0], boxes:data[1]['boxes'], docks:data[1]['docks'], threshold:data[1]['threshold']});
+                    },function (err) {
                         reject(err);
                     })
                 }, function (err) {
@@ -34,17 +43,27 @@ module.exports = function (router) {
                 });
 
             }));
+            promises.push(mongoose.model('FeignedPlankPrice').getFromRequest(req.body));
             promises.push(mongoose.model('DecorativeElementPrice').getFromRequest(req.body));
             promises.push(mongoose.model('JambPrice').getFromRequest(req.body));
             promises.push(mongoose.model('ClothPrice').getFromRequest(req.body));
             promises.push(Formules.getPortalPrice(req.body, material));
             Promise.all(promises).then(function (data) {
-                return res.json(data);
+                const response = {
+                    cornice: data[0]['cornice'],
+                    boxes: data[0]['boxes'],
+                    docks: data[0]['docks'],
+                    threshold: data[0]['threshold'],
+                    feigned_plank: data[1],
+                    decorative_element: data[2],
+                    jamb: data[3],
+                    cloth: data[4]
+                };
+                return res.json(response);
             }, function (data) {
                 return res.json(data);
             });
         });
-
     });
     router.get('/setClothPrice', function (req, res) {
         const needs = ['furnish', 'color', 'cloth', 'cloth_type', 'dop'];
